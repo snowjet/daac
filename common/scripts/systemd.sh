@@ -1,7 +1,7 @@
 # Fix systemd
 
-for i in /lib/systemd/system/sysinit.target.wants/*
-    do [ $i == systemd-tmpfiles-setup.service ] || rm -f /lib/systemd/system/sysinit.target.wants/$i
+for file in /lib/systemd/system/sysinit.target.wants/*
+    do [ $file == systemd-tmpfiles-setup.service ] || rm -f $file
 done
 
 rm -f /lib/systemd/system/multi-user.target.wants/*

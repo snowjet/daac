@@ -18,5 +18,5 @@ If you are using the autofs mounts you will need to start the container with SYS
 * -cap-add run this a privileged container
 
 ```bash
-podman run -p 3389:3389 --dns 8.8.8.8 -d -cap-add SYS_ADMIN localhost/gnome
+podman run -p 3389:3389 --dns 8.8.8.8 -d --cap-add SYS_ADMIN localhost/gnome
 ```

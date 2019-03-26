@@ -8,7 +8,7 @@ ENV IPA_SERVER="" \
 
 SHELL ["/bin/bash", "-c"]
 
-ADD ./scripts/ /tmp/
+ADD ../common/scripts/ /tmp/
 RUN find /tmp/ -name '*.sh' -exec chmod a+x {} +
 
 RUN /tmp/systemd.sh
@@ -24,6 +24,7 @@ echo "PREFERRED=/usr/bin/gnome-session --session gnome-classic" > /etc/sysconfig
 
 RUN /tmo/install_tools.sh
 RUN /tmp/autofs.sh
+RUN /tmp/ipa.sh
 
 # Final Clean
 RUN \
@@ -32,6 +33,6 @@ yum clean all; \
 rm -rf /var/cache/yum; \
 rm -rf /tmp/*.sh
 
-EXPOSE 3389
+EXPOSE 8080
 VOLUME [ "/sys/fs/cgroup" ]
 CMD [ "/usr/sbin/init" ]
