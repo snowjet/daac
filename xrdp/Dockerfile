@@ -10,7 +10,7 @@ ENV IPA_SERVER="" \
 
 ##SHELL ["/bin/bash", "-c"]
 
-ADD ./scripts/ /tmp/
+ADD ../common/scripts/ /tmp/
 RUN find /tmp/ -name '*.sh' -exec chmod a+x {} +
 
 RUN /tmp/systemd.sh
@@ -24,8 +24,8 @@ yum clean all; \
 echo "PREFERRED=/usr/bin/gnome-session --session gnome-classic" > /etc/sysconfig/desktop; \
 systemctl enable xrdp.service
 
-COPY ./config/xrdp/xrdp.ini /etc/xrdp/xrdp.ini
-COPY ./config/xrdp/sesman.ini /etc/xrdp/sesman.ini
+COPY ../common/config/xrdp/xrdp.ini /etc/xrdp/xrdp.ini
+COPY ../common/config/xrdp/sesman.ini /etc/xrdp/sesman.ini
 
 RUN /tmp/autofs.sh
 RUN /tmp/ipa.sh
