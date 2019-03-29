@@ -1,4 +1,6 @@
 FROM centos:7
+# FROM registry.access.redhat.com/rhel7/rhel 
+
 ENV container docker
 
 ENV IPA_SERVER="" \
@@ -6,25 +8,24 @@ ENV IPA_SERVER="" \
     LOCAL_AUTH_USER="" \
     NFS_HOMEDIR_SEVER=""
 
-SHELL ["/bin/bash", "-c"]
+##SHELL ["/bin/bash", "-c"]
 
-ADD ../common/scripts/ /tmp/
+ADD ./scripts/ /tmp/
 RUN find /tmp/ -name '*.sh' -exec chmod a+x {} +
 
 RUN /tmp/systemd.sh
 
 RUN \
-yum update -y && \
 yum install -y epel-release && \
 yum install -y xrdp xorgxrdp autofs nfs-utils wget chromium && \
-yum install -y gnome-classic-session gnome-session gnome-terminal nautilus-open-terminal control-center liberation-mono-fonts firefox \
+yum install -y gnome-classic-session gnome-session gnome-terminal nautilus-open-terminal control-center liberation-mono-fonts \
 yum autoremove -y; \
 yum clean all; \
 echo "PREFERRED=/usr/bin/gnome-session --session gnome-classic" > /etc/sysconfig/desktop; \
 systemctl enable xrdp.service
 
-COPY config/xrdp/xrdp.ini /etc/xrdp/xrdp.ini
-COPY config/xrdp/sesman.ini /etc/xrdp/sesman.ini
+COPY ./config/xrdp/xrdp.ini /etc/xrdp/xrdp.ini
+COPY ./config/xrdp/sesman.ini /etc/xrdp/sesman.ini
 
 RUN /tmp/autofs.sh
 RUN /tmp/ipa.sh

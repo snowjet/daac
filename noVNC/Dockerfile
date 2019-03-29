@@ -14,15 +14,14 @@ RUN find /tmp/ -name '*.sh' -exec chmod a+x {} +
 RUN /tmp/systemd.sh
 
 RUN \
-yum update -y && \
 yum install -y epel-release && \
-yum install -y novnc gdm Xvfb x11nvc && \
-yum install -y gnome-classic-session gnome-session gnome-terminal nautilus-open-terminal control-center liberation-mono-fonts firefox \
+yum install -y novnc gdm xorg-x11-server-Xvfb x11vnc xorg-x11-drv-fbdev xorg-x11-font-utils xdg-user-dirs xcb-util-wm && \
+yum install -y gnome-classic-session gnome-session gnome-terminal nautilus-open-terminal control-center liberation-mono-fonts \
 yum autoremove -y; \
 yum clean all; \
 echo "PREFERRED=/usr/bin/gnome-session --session gnome-classic" > /etc/sysconfig/desktop
 
-RUN /tmo/install_tools.sh
+RUN /tmp/install_tools.sh
 RUN /tmp/autofs.sh
 RUN /tmp/ipa.sh
 

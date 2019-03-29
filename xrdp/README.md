@@ -3,6 +3,14 @@
 
 Desktop as a Container
 
+## Prereq
+
+This container requires systemd - so you will need enable the relevant SELinux policy
+
+```bash
+setsebool -P container_manage_cgroup 1
+```
+
 ## Howto Build
 
 ```bash
