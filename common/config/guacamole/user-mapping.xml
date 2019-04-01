@@ -1,0 +1,12 @@
+<user-mapping>
+        <authorize 
+                username="user" 
+                password="5F4DCC3B5AA765D61D8327DEB882CF99" 
+                encoding="md5">
+                <connection name="RHEL 7">
+                        <protocol>rdp</protocol>
+                        <param name="hostname">127.0.0.1</param>
+                        <param name="port">3389</param>
+                </connection>
+        </authorize>
+</user-mapping>
