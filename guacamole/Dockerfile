@@ -10,8 +10,6 @@ ARG LOCAL_AUTH_USER_PWHASH=""
 ARG NFS_HOMEDIR_SEVER=""
 ARG DESKTOP=""
 
-##SHELL ["/bin/bash", "-c"]
-
 ADD common/scripts/ /tmp/
 RUN find /tmp/ -name '*.sh' -exec chmod a+x {} +
 

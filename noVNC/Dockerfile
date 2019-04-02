@@ -11,6 +11,7 @@ ENV IPA_SERVER="" \
 SHELL ["/bin/bash", "-c"]
 
 ADD ../common/scripts/ /tmp/
+
 RUN find /tmp/ -name '*.sh' -exec chmod a+x {} +
 
 RUN /tmp/systemd.sh
