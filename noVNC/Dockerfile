@@ -3,8 +3,10 @@ ENV container docker
 
 ENV IPA_SERVER="" \
     LDAP_BASEDN="" \
-    LOCAL_AUTH_USER="" \
-    NFS_HOMEDIR_SEVER=""
+    LOCAL_AUTH_USER="johan" \
+    LOCAL_AUTH_USER_PWHASH="Passw0rd123" \
+    NFS_HOMEDIR_SEVER="" \ 
+    OC_DEV_TOOLS="" 
 
 SHELL ["/bin/bash", "-c"]
 
@@ -22,8 +24,9 @@ yum clean all; \
 echo "PREFERRED=/usr/bin/gnome-session --session gnome-classic" > /etc/sysconfig/desktop
 
 RUN /tmp/install_tools.sh
+RUN /tmp/install_oc_dev_tools.sh
 RUN /tmp/autofs.sh
-RUN /tmp/ipa.sh
+RUN /tmp/add_local_user.sh
 
 # Final Clean
 RUN \
