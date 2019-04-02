@@ -18,7 +18,7 @@ case $DESKTOP in
           ;;
 esac
 
-yum install liberation-fonts
+yum install -y liberation-fonts
 
 yum autoremove -y
 yum clean all
