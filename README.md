@@ -5,7 +5,7 @@ Desktop as a Container
 * XRDP
 * noVNC (broken)
 
-## Prereq
+## Prerequisites
 
 This container requires systemd - so you will need enable the relevant SELinux policy
 
@@ -15,22 +15,22 @@ setsebool -P container_manage_cgroup 1
 
 ## Build Arguments
 
-If you want ldap auth set these build args
-ARG IPA_SERVER="<server name>"
-ARG LDAP_BASEDN="<ldap base dn>"
+If you want ldap auth set these build args:
+* ARG IPA_SERVER="<server name>"
+* ARG LDAP_BASEDN="<ldap base dn>"
 
-If you want a local user set these build args
-ARG LOCAL_AUTH_USER="<username>"
-ARG LOCAL_AUTH_USER_PWHASH=""
+If you want a local user set these build args:
+* ARG LOCAL_AUTH_USER="<username>"
+* ARG LOCAL_AUTH_USER_PWHASH=""
 
-If you want nfs home dirs set set this build args
-ARG NFS_HOMEDIR_SEVER=""
+If you want nfs home dirs set set this build args:
+* ARG NFS_HOMEDIR_SEVER=""
 
-Set a desktop environement
-ARG DESKTOP="<gnome3, mate>"
+Set a desktop environment:
+* ARG DESKTOP="<gnome3, mate>"
 
 Install OpenShift Developer Tools
-ARG OC_DEV_TOOLS=true
+* ARG OC_DEV_TOOLS=true
 
 ## Howto Build
 
