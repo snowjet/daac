@@ -9,6 +9,7 @@ ARG LOCAL_AUTH_USER=""
 ARG LOCAL_AUTH_USER_PWHASH=""
 ARG NFS_HOMEDIR_SEVER=""
 ARG DESKTOP=""
+ARG OC_DEV_TOOLS="" 
 
 ADD common/scripts/ /tmp/
 RUN find /tmp/ -name '*.sh' -exec chmod a+x {} +
@@ -28,6 +29,7 @@ COPY common/config/xrdp/sesman.ini /etc/xrdp/sesman.ini
 RUN /tmp/install_tools.sh
 RUN /tmp/install_desktop.sh
 RUN /tmp/install_guacamole.sh
+RUN /tmp/install_oc_dev_tools.sh
 RUN /tmp/add_local_user.sh
 RUN /tmp/autofs.sh
 RUN /tmp/ipa.sh

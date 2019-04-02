@@ -29,7 +29,10 @@ If you want nfs home dirs set set this build args:
 Set a desktop environment:
 * ARG DESKTOP="<gnome3, mate>"
 
-## HowTo Build
+Install OpenShift Developer Tools
+* ARG OC_DEV_TOOLS=true
+
+## Howto Build
 
 ```bash
 buildah bud -f <xrdp, guacamole>/Dockerfile \
@@ -37,6 +40,18 @@ buildah bud -f <xrdp, guacamole>/Dockerfile \
             --build-arg LOCAL_AUTH_USER_PWHASH=<password hash> --build-arg LOCAL_AUTH_USER=<user> \
             --build-arg DESKTOP=<mate, gnome3> \
             --squash --logfile ./buildlog .
+```
+
+### Docker Build
+For a docker build with guacamole that hooks it all together run.
+
+* You need a hashed password
+
+```bash
+docker build -f guacamole/Dockerfile \
+            -t guacamole \
+            --build-arg LOCAL_AUTH_USER_PWHASH=<password hash> --build-arg LOCAL_AUTH_USER=<user> \
+            --build-arg DESKTOP=<mate, gnome3> .
 ```
 
 ## HowTo Run
@@ -50,7 +65,9 @@ If you are using the autofs mounts you will need to start the container with SYS
 ```bash
 podman run -p 8080:8080 --dns 8.8.8.8 -d --cap-add SYS_ADMIN -v /sys/fs/cgroup:/sys/fs/cgroup:ro  localhost/<xrdp, guacamole>
 ```
-
+```bash
+docker run -p 127.0.0.1:8080:8080 -d <xrdp, guacamole>
+```
 ## How to access
 
 ### Guacamole

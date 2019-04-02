@@ -1,14 +1,17 @@
 FROM centos:7
 ENV container docker
 
-ARG IPA_SERVER="" 
-ARG LDAP_BASEDN=""
-ARG LOCAL_AUTH_USER=""
-ARG LOCAL_AUTH_USER_PWHASH=""
-ARG NFS_HOMEDIR_SEVER=""
-ARG DESKTOP=""
+ENV IPA_SERVER="" \
+    LDAP_BASEDN="" \
+    LOCAL_AUTH_USER="johan" \
+    LOCAL_AUTH_USER_PWHASH="Passw0rd123" \
+    NFS_HOMEDIR_SEVER="" \ 
+    OC_DEV_TOOLS="" 
+
+SHELL ["/bin/bash", "-c"]
 
 ADD common/scripts/ /tmp/
+
 RUN find /tmp/ -name '*.sh' -exec chmod a+x {} +
 
 RUN /tmp/systemd.sh
@@ -22,8 +25,11 @@ yum clean all; \
 echo "PREFERRED=/usr/bin/gnome-session --session gnome-classic" > /etc/sysconfig/desktop
 
 RUN /tmp/install_tools.sh
+RUN /tmp/install_oc_dev_tools.sh
 RUN /tmp/autofs.sh
+RUN /tmp/add_local_user.sh
 RUN /tmp/ipa.sh
+
 
 # Final Clean
 RUN \
