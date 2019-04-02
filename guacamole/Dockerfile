@@ -11,6 +11,8 @@ ARG NFS_HOMEDIR_SEVER=""
 ARG DESKTOP=""
 ARG OC_DEV_TOOLS="" 
 
+ADD common/config /tmp/config
+
 ADD common/scripts/ /tmp/
 RUN find /tmp/ -name '*.sh' -exec chmod a+x {} +
 
