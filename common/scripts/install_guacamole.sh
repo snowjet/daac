@@ -40,7 +40,6 @@ guacd-hostname:     localhost
 guacd-port:         4822
 user-mapping:       /usr/share/tomcat/.guacamole/user-mapping.xml
 auth-provider:      net.sourceforge.guacamole.net.basic.BasicFileAuthenticationProvider
-basic-user-mapping: /usr/share/tomcat/.guacamole/user-mapping.xml
 EOF
 
 ln -s /etc/sysconfig/guacd /usr/share/tomcat/.guacamole/guacamole.properties
