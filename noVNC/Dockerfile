@@ -1,14 +1,14 @@
 FROM centos:7
 ENV container docker
 
-ENV IPA_SERVER="" \
-    LDAP_BASEDN="" \
-    LOCAL_AUTH_USER="" \
-    NFS_HOMEDIR_SEVER=""
+ARG IPA_SERVER="" 
+ARG LDAP_BASEDN=""
+ARG LOCAL_AUTH_USER=""
+ARG LOCAL_AUTH_USER_PWHASH=""
+ARG NFS_HOMEDIR_SEVER=""
+ARG DESKTOP=""
 
-SHELL ["/bin/bash", "-c"]
-
-ADD ../common/scripts/ /tmp/
+ADD common/scripts/ /tmp/
 RUN find /tmp/ -name '*.sh' -exec chmod a+x {} +
 
 RUN /tmp/systemd.sh
