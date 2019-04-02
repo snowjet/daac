@@ -12,7 +12,7 @@ ENV IPA_SERVER="" \
 
 ##SHELL ["/bin/bash", "-c"]
 
-ADD ../common/scripts/ /tmp/
+ADD common/scripts/ /tmp/
 RUN find /tmp/ -name '*.sh' -exec chmod a+x {} +
 
 RUN /tmp/systemd.sh
@@ -26,13 +26,15 @@ yum clean all; \
 echo "PREFERRED=/usr/bin/gnome-session --session gnome-classic" > /etc/sysconfig/desktop; \
 systemctl enable xrdp.service
 
-COPY ../common/config/xrdp/xrdp.ini /etc/xrdp/xrdp.ini
-COPY ../common/config/xrdp/sesman.ini /etc/xrdp/sesman.ini
+COPY common/config/xrdp/xrdp.ini /etc/xrdp/xrdp.ini
+COPY common/config/xrdp/sesman.ini /etc/xrdp/sesman.ini
 
 RUN /tmp/install_tools.sh
 RUN /tmp/install_oc_dev_tools.sh
 RUN /tmp/autofs.sh
 RUN /tmp/add_local_user.sh
+RUN /tmp/ipa.sh
+
 
 # Final Clean
 RUN \

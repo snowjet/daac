@@ -10,7 +10,7 @@ ENV IPA_SERVER="" \
 
 SHELL ["/bin/bash", "-c"]
 
-ADD ../common/scripts/ /tmp/
+ADD common/scripts/ /tmp/
 
 RUN find /tmp/ -name '*.sh' -exec chmod a+x {} +
 
@@ -28,6 +28,8 @@ RUN /tmp/install_tools.sh
 RUN /tmp/install_oc_dev_tools.sh
 RUN /tmp/autofs.sh
 RUN /tmp/add_local_user.sh
+RUN /tmp/ipa.sh
+
 
 # Final Clean
 RUN \
