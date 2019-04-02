@@ -10,7 +10,7 @@ case $DESKTOP in
      mate|*)
             echo "Installing Mate Destop"
             yum --setopt=group_package_types=mandatory groupinstall -y "Mate Desktop"
-            yum install -y numix-icon-theme-square numix-gtk-theme numix-icon-theme-circle liberation-mono-fonts xterm
+            yum install -y adapta-gtk-theme liberation-mono-fonts mate-terminal
             echo "PREFERRED=/usr/bin/mate-session" > /etc/sysconfig/desktop
 
 cat << EOF > /etc/dconf/db/local.d/00_mate_desktop
