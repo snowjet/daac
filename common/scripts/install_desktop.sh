@@ -20,5 +20,4 @@ esac
 
 yum install -y liberation-fonts
 
-yum autoremove -y
-yum clean all
+# END
