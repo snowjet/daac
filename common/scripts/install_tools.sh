@@ -1,3 +1,7 @@
 # Install Useful Tools
 
-yum install -y wget unzip git htop wget chromium firefox curl git2u
+yum remove -y git
+
+yum autoremove -y 
+
+yum install -y wget unzip htop wget chromium firefox curl git2u
