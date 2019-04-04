@@ -87,3 +87,6 @@ podman run -p 8080:8080 --dns 8.8.8.8 -d localhost/html5
 ### Guacamole
 
 Browse to: http://127.0.0.1:8080/root
+
+## How to Run on MiniShift
+[MiniShift File](documentation/Run_on_minishift.md)
