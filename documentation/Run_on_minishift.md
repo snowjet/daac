@@ -34,7 +34,7 @@ docker login -u developer -p $(oc whoami -t) $(minishift openshift registry)
 ## Build the container
 The tag is important, this assumes you used html5
 
-[a relative link](../README.md)
+[Readme File](../README.md)
 
 
 ## Upload to your image stream
