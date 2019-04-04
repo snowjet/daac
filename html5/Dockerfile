@@ -27,6 +27,8 @@ RUN /tmp/install_oc_dev_tools.sh
 RUN /tmp/add_local_user.sh
 RUN /tmp/autofs.sh
 RUN /tmp/ipa.sh
+RUN mkdir -p /mnt/workspace
+RUN chmod 755 /mnt/workspace
 
 # Final Clean
 RUN \
@@ -37,5 +39,5 @@ rm -rf /tmp/*.sh; \
 rm -rf /tmp/config
 
 EXPOSE 8080
-VOLUME [ "/sys/fs/cgroup" ]
+VOLUME [ "/sys/fs/cgroup", "/mnt/workspace" ]
 ENTRYPOINT /usr/bin/supervisord -c /etc/supervisord/supervisord.conf
