@@ -40,7 +40,7 @@ yum autoremove -y; \
 yum clean all; \
 rm -rf /var/cache/yum; \
 rm -rf /tmp/*.sh; \
-rm -rf /tmp/config \
+rm -rf /tmp/config; \
 rm -f /var/log/*.log
 
 EXPOSE 8080
