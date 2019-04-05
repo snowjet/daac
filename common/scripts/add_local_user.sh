@@ -4,5 +4,5 @@
 # LOCAL_AUTH_USER_PWHASH=""
 
 if [[ ! -z $LOCAL_AUTH_USER  ]]; then
-    useradd ${LOCAL_AUTH_USER} --create-home --password "${LOCAL_AUTH_USER_PWHASH}"
+    useradd ${LOCAL_AUTH_USER} -g 0 --create-home --password "${LOCAL_AUTH_USER_PWHASH}"
 fi
