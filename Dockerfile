@@ -12,6 +12,10 @@ ARG NFS_HOMEDIR_SEVER=""
 ARG DESKTOP=""
 ARG OC_DEV_TOOLS=""
 
+ENV guac_username="" \
+    guac_password_hash="" \
+    guac_password_encoding=""
+
 ADD common/config /tmp/config
 
 ADD common/scripts/ /tmp/
@@ -45,4 +49,4 @@ rm -f /var/log/*.log
 
 EXPOSE 8080
 VOLUME [ "/sys/fs/cgroup", "/mnt/workspace" ]
-ENTRYPOINT /usr/bin/supervisord -c /etc/supervisord/supervisord.conf
+ENTRYPOINT /opt/setup.py; /usr/bin/supervisord -c /etc/supervisord/supervisord.conf

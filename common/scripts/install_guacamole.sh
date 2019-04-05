@@ -44,20 +44,7 @@ EOF
 
 ln -s /etc/sysconfig/guacd /usr/share/tomcat/.guacamole/guacamole.properties
 
-cat << EOF > /usr/share/tomcat/.guacamole/user-mapping.xml
-<user-mapping>
-        <authorize 
-                username="user" 
-                password="5f4dcc3b5aa765d61d8327deb882cf99" 
-                encoding="md5">
-                <connection name="RHEL 7">
-                        <protocol>rdp</protocol>
-                        <param name="hostname">127.0.0.1</param>
-                        <param name="port">3389</param>
-                </connection>
-        </authorize>
-</user-mapping>
-EOF
+cp /tmp/config/guacamole/user-mapping.xml /usr/share/tomcat/.guacamole/user-mapping.xml
 
 chmod 600 /usr/share/tomcat/.guacamole/user-mapping.xml
 chown -R tomcat:tomcat /usr/share/tomcat/.guacamole/
@@ -71,7 +58,10 @@ if [[ ! -z $SYSTEMD  ]]; then
         systemctl enable tomcat
         systemctl enable guacd
 fi
-
 cp /tmp/config/supervisord/conf.d/guacd.conf /etc/supervisord/conf.d/guacd.conf
+
+cp /tmp/config/bin/setup.py /opt/setup.py
+chmod 755 /opt/setup.py
+chgrp -R 0 /opt/setup.py
 
 # END
