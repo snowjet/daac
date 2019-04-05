@@ -1,17 +1,11 @@
 # DaaC
 Desktop as a Container
 
+Key Features
+
 * Guacamole
 * XRDP
-* noVNC (broken)
-
-## Prerequisites
-
-This container requires systemd - so you will need enable the relevant SELinux policy
-
-```bash
-setsebool -P container_manage_cgroup 1
-```
+* Selectable Desktop (gnome3, mate and xfce4)
 
 ## Build Arguments
 

@@ -47,6 +47,8 @@ rm -rf /tmp/*.sh; \
 rm -rf /tmp/config; \
 rm -f /var/log/*.log
 
+USER ${LOCAL_AUTH_USER}
+
 EXPOSE 8080
 VOLUME [ "/sys/fs/cgroup", "/mnt/workspace" ]
 ENTRYPOINT /opt/setup.py; /usr/bin/supervisord -c /etc/supervisord/supervisord.conf
