@@ -6,7 +6,9 @@ cp /tmp/config/supervisord/supervisord.conf /etc/supervisord/supervisord.conf
 
 mkdir -p /var/run/dbus
 chown dbus:dbus /var/run/dbus
-dbus-uuidgen --ensure
 cp /tmp/config/supervisord/conf.d/dbus.conf /etc/supervisord/conf.d/dbus.conf
+chgrp -R 0 /var/run/dbus
+chmod -R g=u /var/run/dbus
+dbus-uuidgen --ensure
 
 # END

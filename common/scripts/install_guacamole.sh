@@ -61,14 +61,17 @@ EOF
 
 chmod 600 /usr/share/tomcat/.guacamole/user-mapping.xml
 chown -R tomcat:tomcat /usr/share/tomcat/.guacamole/
+chgrp -R 0 /usr/share/tomcat/.guacamole/
+chmod -R g=u /usr/share/tomcat/.guacamole/
 chown tomcat:tomcat /var/lib/tomcat/webapps/root.war
+chgrp -R 0 /var/lib/tomcat/webapps/
+chmod -R g=u /var/lib/tomcat/webapps/
 
 if [[ ! -z $SYSTEMD  ]]; then
         systemctl enable tomcat
         systemctl enable guacd
 fi
 
-cp /tmp/config/supervisord/conf.d/tomcat.conf /etc/supervisord/conf.d/tomcat.conf
 cp /tmp/config/supervisord/conf.d/guacd.conf /etc/supervisord/conf.d/guacd.conf
 
 # END
