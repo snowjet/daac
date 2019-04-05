@@ -90,4 +90,4 @@ Browse to: http://127.0.0.1:8080/root
 
 ## How to Run on MiniShift
 [MiniShift File](documentation/Run_on_minishift.md)
-[MiniShift File](documentation/Run_on_OpenShift_Cluster.md)
+[OpenShift File](documentation/Run_on_OpenShift_Cluster.md) - not fully working yet
