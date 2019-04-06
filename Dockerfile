@@ -47,7 +47,7 @@ rm -rf /tmp/*.sh; \
 rm -rf /tmp/config; \
 rm -f /var/log/*.log
 
-USER ${LOCAL_AUTH_USER}
+USER user
 
 EXPOSE 8080
 VOLUME [ "/sys/fs/cgroup", "/mnt/workspace" ]
