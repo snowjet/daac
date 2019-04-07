@@ -11,4 +11,13 @@ chgrp -R 0 /var/run/dbus
 chmod -R g=u /var/run/dbus
 dbus-uuidgen --ensure
 
+# OpenShift Tweaks
+cp /tmp/config/bin/uid_entrypoint /opt/uid_entrypoint
+chmod 755 /optuid_entrypoint
+chgrp -R 0 /opt/uid_entrypoint
+chmod -R g=u /opt/uid_entrypoint /etc/passwd
+
+chgrp -R 0 /var/run && chmod -R g=u /var/run 
+chgrp -R 0 /var/log && chmod -R g=u /var/log
+
 # END

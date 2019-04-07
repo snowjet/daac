@@ -32,11 +32,10 @@ RUN /tmp/install_oc_dev_tools.sh
 RUN /tmp/add_local_user.sh
 RUN /tmp/autofs.sh
 RUN /tmp/ipa.sh
+
 RUN mkdir -p /mnt/workspace
 RUN chmod 755 /mnt/workspace
-RUN chgrp -R 0 /mnt/workspace && chmod -R g=u /mnt/workspace
-RUN chgrp -R 0 /var/run && chmod -R g=u /var/run 
-RUN chgrp -R 0 /var/log && chmod -R g=u /var/log 
+RUN chgrp -R 0 /mnt/workspace && chmod -R g=u /mnt/workspace 
 
 # Final Clean
 RUN \
@@ -47,8 +46,8 @@ rm -rf /tmp/*.sh; \
 rm -rf /tmp/config; \
 rm -f /var/log/*.log
 
-USER user
+USER 10001
 
 EXPOSE 8080
-VOLUME [ "/sys/fs/cgroup", "/mnt/workspace" ]
-ENTRYPOINT /opt/setup.py; /usr/bin/supervisord -c /etc/supervisord/supervisord.conf
+VOLUME [ "/sys/fs/cgroup",  "/dev/shm", "/mnt/workspace", "/home/user" ]
+ENTRYPOINT /opt/uid_entrypoint; /opt/setup.py; /usr/bin/supervisord -c /etc/supervisord/supervisord.conf

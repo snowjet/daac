@@ -63,5 +63,6 @@ cp /tmp/config/supervisord/conf.d/guacd.conf /etc/supervisord/conf.d/guacd.conf
 cp /tmp/config/bin/setup.py /opt/setup.py
 chmod 755 /opt/setup.py
 chgrp -R 0 /opt/setup.py
+chmod -R g=u /opt/setup.py
 
 # END
