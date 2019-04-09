@@ -18,11 +18,6 @@ chgrp -R 0 /run/dbus/messagebus.pid && chmod -R g=u /run/dbus/messagebus.pid
 chgrp -R 0 /run/dbus/system_bus_socket.pid && chmod -R g=u /run/dbus/system_bus_socket.pid
 chmod 777 /run/dbus/system_bus_socket
 
-cp /tmp/config/bin/uid_entrypoint /opt/uid_entrypoint
-chmod 755 /optuid_entrypoint
-chgrp -R 0 /opt/uid_entrypoint
-chmod -R g=u /opt/uid_entrypoint /etc/passwd
-
 chgrp -R 0 /var/run && chmod -R g=u /var/run 
 chgrp -R 0 /var/log && chmod -R g=u /var/log
 

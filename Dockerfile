@@ -17,6 +17,7 @@ ENV guac_username="" \
     guac_password_encoding=""
 
 ADD common/config /tmp/config
+ADD common/bin /opt/bin
 
 ADD common/scripts/ /tmp/
 RUN find /tmp/ -name '*.sh' -exec chmod a+x {} +
@@ -32,6 +33,8 @@ RUN /tmp/install_oc_dev_tools.sh
 RUN /tmp/add_local_user.sh
 RUN /tmp/autofs.sh
 RUN /tmp/ipa.sh
+
+RUN /tmp/99_OpenShift.sh
 
 RUN mkdir -p /mnt/workspace
 RUN chmod 755 /mnt/workspace
@@ -52,4 +55,4 @@ USER 10001
 
 EXPOSE 8080
 VOLUME [ "/sys/fs/cgroup",  "/dev/shm", "/mnt/workspace", "/home/user" ]
-ENTRYPOINT /opt/uid_entrypoint; /opt/setup.py; /usr/bin/supervisord -c /etc/supervisord/supervisord.conf
+ENTRYPOINT /opt/bin/entrypoint.sh
