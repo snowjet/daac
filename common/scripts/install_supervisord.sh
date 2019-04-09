@@ -12,6 +12,12 @@ chmod -R g=u /var/run/dbus
 dbus-uuidgen --ensure
 
 # OpenShift Tweaks
+touch /run/dbus/messagebus.pid
+touch /run/dbus/system_bus_socket.pid
+chgrp -R 0 /run/dbus/messagebus.pid && chmod -R g=u /run/dbus/messagebus.pid
+chgrp -R 0 /run/dbus/system_bus_socket.pid && chmod -R g=u /run/dbus/system_bus_socket.pid
+chmod 777 /run/dbus/system_bus_socket
+
 cp /tmp/config/bin/uid_entrypoint /opt/uid_entrypoint
 chmod 755 /optuid_entrypoint
 chgrp -R 0 /opt/uid_entrypoint

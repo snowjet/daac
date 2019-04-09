@@ -48,6 +48,8 @@ rm -f /var/log/*.log
 
 USER 10001
 
+# WORKDIR /home/${LOCAL_AUTH_USER}
+
 EXPOSE 8080
 VOLUME [ "/sys/fs/cgroup",  "/dev/shm", "/mnt/workspace", "/home/user" ]
 ENTRYPOINT /opt/uid_entrypoint; /opt/setup.py; /usr/bin/supervisord -c /etc/supervisord/supervisord.conf

@@ -17,6 +17,12 @@ chmod -R g=u /var/log/xrdp-sesman.log
 chgrp -R 0 /etc/xrdp
 chmod -R g=u /etc/xrdp
 
+# If you need to change the config on the fly
+chmod g+w /etc/xrdp
+
+chmod u+s /usr/sbin/xrdp-sesman
+chmod u+s /usr/sbin/xrdp
+
 if [[ ! -z $SYSTEMD  ]]; then
         systemctl enable tomcat
         systemctl enable guacd

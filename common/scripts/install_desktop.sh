@@ -21,16 +21,12 @@ case $DESKTOP in
             yum -y groupinstall "X Window system"
             yum -y groupinstall --setopt=group_package_types=mandatory xfce
             echo "PREFERRED=/usr/bin/startxfce4" > /etc/sysconfig/desktop
-
           ;;
 esac
 
-touch /run/dbus/messagebus.pid
-touch /run/dbus/system_bus_socket.pid
-chgrp -R 0 /run/dbus/messagebus.pid && chmod -R g=u /run/dbus/messagebus.pid
-chgrp -R 0 /run/dbus/system_bus_socket.pid && chmod -R g=u /run/dbus/system_bus_socket.pid
-chmod 777 /run/dbus/system_bus_socket
-
 yum install -y liberation-fonts
+
+# Reduce the image size
+# yum remove -y  mate-backgrounds avahi
 
 # END
