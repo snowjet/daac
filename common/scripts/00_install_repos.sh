@@ -1,5 +1,7 @@
 # Install Repos
 
+cp /tmp/config/yum.repos.d/tigervnc.repo /etc/yum.repos.d/tigervnc.repo
+
 yum update -y
 
 yum install -y epel-release

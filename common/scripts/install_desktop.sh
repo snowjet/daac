@@ -9,8 +9,11 @@ case $DESKTOP in
           ;;
      mate)
             echo "Installing Mate Destop"
-            yum --setopt=group_package_types=mandatory groupinstall -y "Mate Desktop"
-            yum install -y numix-gtk-theme numix-icon-theme mate-terminal
+            # yum --setopt=group_package_types=mandatory groupinstall -y "Mate Desktop"
+            yum install -y caja marco mate-desktop mate-menus mate-session-manager \
+                           mate-system-monitor xdg-user-dirs-gtk yelp gtk2-engines mate-terminal mate-panel \
+                           mate-polkit
+            yum install -y numix-gtk-theme numix-icon-theme 
             echo "PREFERRED=/usr/bin/mate-session" > /etc/sysconfig/desktop
 
             cp /tmp/config/dconf/00_mate_theme /etc/dconf/db/local.d/
@@ -27,6 +30,8 @@ esac
 yum install -y liberation-fonts
 
 # Reduce the image size
-# yum remove -y  mate-backgrounds avahi
+# yum remove -y  mate-backgrounds avahi mate-backgrounds mate-control-center mate-icon-theme mate-media mate-notification-daemon mate-power-manager mate-settings-daemon mate-themes
+
+# libmatekbd libmateweather 
 
 # END

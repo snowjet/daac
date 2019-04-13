@@ -33,7 +33,7 @@ yum --enablerepo=epel-testing install -y guacd libguac{,-client*}
 mkdir -p /usr/share/tomcat/.guacamole
 
 rm -rf /var/lib/tomcat/webapps/*
-wget -O /var/lib/tomcat/webapps/root.war https://www.apache.org/dist/guacamole/1.0.0/binary/guacamole-${GUAC_VER}.war
+wget -q -O /var/lib/tomcat/webapps/root.war https://www.apache.org/dist/guacamole/1.0.0/binary/guacamole-${GUAC_VER}.war
 
 cat << EOF > /etc/sysconfig/guacd
 guacd-hostname:     localhost
@@ -50,6 +50,7 @@ chmod 600 /usr/share/tomcat/.guacamole/user-mapping.xml
 chown -R tomcat:tomcat /usr/share/tomcat/.guacamole/
 chgrp -R 0 /usr/share/tomcat/.guacamole/
 chmod -R g=u /usr/share/tomcat/.guacamole/
+
 chown tomcat:tomcat /var/lib/tomcat/webapps/root.war
 chgrp -R 0 /var/lib/tomcat/webapps/
 chmod -R g=u /var/lib/tomcat/webapps/

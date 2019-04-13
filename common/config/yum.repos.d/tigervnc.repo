@@ -1,0 +1,11 @@
+[tigervnc]
+name=tigervnc
+baseurl=https://dl.bintray.com/tigervnc/stable/el7/RPMS/x86_64/
+enabled=1
+gpgcheck=0
+
+[tigervnc-noarch]
+name=tigervnc-noarch
+baseurl=https://dl.bintray.com/tigervnc/stable/el7/RPMS/noarch/
+enabled=1
+gpgcheck=0

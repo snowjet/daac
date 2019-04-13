@@ -16,6 +16,8 @@ ENV guac_username="" \
     guac_password_hash="" \
     guac_password_encoding=""
 
+USER root
+
 ADD common/config /tmp/config
 ADD common/bin /opt/bin
 
@@ -31,7 +33,6 @@ RUN /tmp/install_desktop.sh
 RUN /tmp/install_guacamole.sh
 RUN /tmp/install_oc_dev_tools.sh
 RUN /tmp/add_local_user.sh
-RUN /tmp/autofs.sh
 RUN /tmp/ipa.sh
 
 RUN /tmp/99_OpenShift.sh
@@ -51,8 +52,9 @@ rm -f /var/log/*.log
 
 USER 10001
 
-# WORKDIR /home/${LOCAL_AUTH_USER}
+# You need this else X wont work
+WORKDIR /home/${LOCAL_AUTH_USER}
 
 EXPOSE 8080
-VOLUME [ "/sys/fs/cgroup",  "/dev/shm", "/mnt/workspace", "/home/user" ]
-ENTRYPOINT /opt/bin/entrypoint.sh
+VOLUME [ "/dev/shm", "/mnt/workspace" ]
+ENTRYPOINT /opt/bin/entrypoint.sh; /opt/bin/guac_setup.py; /usr/bin/supervisord -c /etc/supervisord/supervisord.conf

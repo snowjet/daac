@@ -14,6 +14,8 @@ dbus-uuidgen --ensure
 # OpenShift Tweaks
 touch /run/dbus/messagebus.pid
 touch /run/dbus/system_bus_socket.pid
+touch /run/dbus/system_bus_socket
+
 chgrp -R 0 /run/dbus/messagebus.pid && chmod -R g=u /run/dbus/messagebus.pid
 chgrp -R 0 /run/dbus/system_bus_socket.pid && chmod -R g=u /run/dbus/system_bus_socket.pid
 chmod 777 /run/dbus/system_bus_socket
