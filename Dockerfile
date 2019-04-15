@@ -12,7 +12,9 @@ ARG NFS_HOMEDIR_SEVER=""
 ARG DESKTOP=""
 ARG OC_DEV_TOOLS=""
 
-ENV guac_username="" \
+ENV LOCAL_AUTH_USER="user" \
+    LOCAL_AUTH_USER_PWHASH="" \
+    guac_username="user" \
     guac_password_hash="" \
     guac_password_encoding=""
 
@@ -53,8 +55,8 @@ rm -f /var/log/*.log
 USER 10001
 
 # You need this else X wont work
-WORKDIR /home/${LOCAL_AUTH_USER}
+WORKDIR /home/user
 
 EXPOSE 8080
 VOLUME [ "/dev/shm", "/mnt/workspace" ]
-ENTRYPOINT /opt/bin/entrypoint.sh; /opt/bin/guac_setup.py; /usr/bin/supervisord -c /etc/supervisord/supervisord.conf
+ENTRYPOINT /opt/bin/uid_entrypoint.sh; /opt/bin/guac_setup.py; /usr/bin/supervisord -c /etc/supervisord/supervisord.conf

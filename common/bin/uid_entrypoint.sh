@@ -1,13 +1,16 @@
 #!/bin/bash
 
+USER_ID=$(id -u)
 if ! whoami &> /dev/null; then
   if [ -w /etc/passwd ]; then
-    echo "${USER_NAME:-user}:x:$(id -u):0:${USER_NAME:-user} user:/home/${LOCAL_AUTH_USER}:/usr/bin/bash" >> /etc/passwd
-    echo "${USER_NAME:-user}:${LOCAL_AUTH_USER_PWHASH}:17997:0:99999:7:::" >> /etc/shadow
+    sed "s@user:x:\${USER_ID}:@user:x:${USER_ID}:@g" /etc/passwd.template > /etc/passwd
+    # chmod 660 /etc/shadow
+    # echo "user:${LOCAL_AUTH_USER_PWHASH}:17997:0:99999:7:::" >> /etc/shadow
+    # chmod 000 /etc/shadow
   fi
 fi
 
-chown -R $(id -u):0 /home/${LOCAL_AUTH_USER}
+chown -R $(id -u):0 /home/user
 chmod 775 /dev/shm
 
 # END

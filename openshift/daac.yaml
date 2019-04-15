@@ -1,0 +1,108 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: daac
+metadata:
+  annotations:
+    description: Guacamole XRDP and VNC over HTML5
+    iconClass: icon-tomcat
+    tags: daac
+  creationTimestamp: null
+  name: daac
+objects:
+- apiVersion: "v1"
+  kind: "ImageStream"
+  metadata:
+    name: "daac"
+  spec:
+    dockerImageRepository: ${DAAC_IMAGE_NAME}
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: daac
+  spec:
+    ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      name: daac
+
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: rdp
+  spec:
+    tls:
+      termination: edge
+    to:
+      kind: Service
+      name: daac
+      weight: 100
+    wildcardPolicy: None
+
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the application server
+    name: daac
+  spec:
+    replicas: 1
+    selector:
+      name: daac
+    strategy:
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          name: daac
+        name: daac
+      spec:
+        containers:
+        - name: daac
+          image: daac:latest
+          ports:
+          - containerPort: 8080
+          env:
+          - name: LOCAL_AUTH_USER_PWHASH
+            value: ${LOCAL_AUTH_USER_PWHASH}
+          - name: guac_username
+            value: ${guac_username}
+          - name: guac_password_hash
+            value: ${guac_password_hash}
+          - name: guac_password_encoding
+            value: ${guac_password_encoding}
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - daac
+        from:
+          kind: ImageStreamTag
+          name: daac:latest
+      type: ImageChange
+
+parameters:
+- description: Daac Image
+  name: DAAC_IMAGE_NAME
+  value: quay.io/rarm_sa/daac
+  required: true
+- description: Password Hash for Local login
+  name: LOCAL_AUTH_USER_PWHASH
+  value: 55CeGsfZ1M932
+  required: true
+- description: Guacamole HTTP username
+  name: guac_username
+  value: user
+  required: true
+- description: Password Hash for Guacamole HTTP Login
+  name: guac_password_hash
+  value: 2865cb20ea1fd3c4fe7c1dfa73505ff1
+  required: true
+- description: Guacamole Password Hash Encoding
+  name: guac_password_encoding
+  value: md5
+  required: true

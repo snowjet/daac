@@ -11,12 +11,11 @@ chmod -R g=u /opt/bin
 chmod -R g=u /etc/passwd
 chmod -R g=u /etc/group
 chmod -R g=u /etc/shadow
+chmod u+s /usr/bin/chmod
 
 chmod -R g+w /etc/supervisord
 chmod -R g+w /var
 chmod -R g+w /home
-
-chmod 755 /opt/bin/*
 
 /opt/bin/fix_permissions.sh /var/run
 /opt/bin/fix_permissions.sh /var/log

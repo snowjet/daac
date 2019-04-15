@@ -20,7 +20,8 @@ parser.add_argument(":")
 args, unknown_args = parser.parse_known_args()
 
 display_env = os.environ.copy()
-display_env["display"] = ":10"
+display_env["DISPLAY"] = ":10"
+display_env["HOME"] = "/home/user"
 
 logging.debug('Commands Received:' + str(args) + str(unknown_args))
 
