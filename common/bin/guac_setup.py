@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from xml.etree import ElementTree as et
 from os import environ
+import argparse
 
 """
 Set these environment variables to update the guacamole user-mapping file
@@ -9,7 +10,10 @@ Set these environment variables to update the guacamole user-mapping file
     guac_password_encoding="md5"
 """
 
-file_user_mapping="/usr/share/tomcat/.guacamole/user-mapping.xml"
+parser = argparse.ArgumentParser()
+parser.add_argument("--vnc_pass", default="")
+parser.add_argument("--user_mapping", default="/usr/share/tomcat/.guacamole/user-mapping.xml")
+args, unknown_args = parser.parse_known_args()
 
 # Set to defaults if env vars are not set
 if environ.get('guac_username'):
@@ -28,11 +32,14 @@ else:
     guac_password_encoding="md5"
 
 # Open original file
-tree = et.parse(file_user_mapping)
+tree = et.parse(args.user_mapping)
 
 tree.find('.//authorize').attrib['username'] = guac_username
 tree.find('.//authorize').attrib['password'] = guac_password_hash
 tree.find('.//authorize').attrib['encoding'] = guac_password_encoding
+tree.find("./authorize/connection/param/[@name='password']").text = args.vnc_pass
+
+# et.dump(tree)
 
 # Write back to file
-tree.write(file_user_mapping)
+tree.write(args.user_mapping)

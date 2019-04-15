@@ -6,15 +6,11 @@ ENV GUACAMOLE_HOME="/usr/share/tomcat/.guacamole"
 
 ARG IPA_SERVER="" 
 ARG LDAP_BASEDN=""
-ARG LOCAL_AUTH_USER=""
-ARG LOCAL_AUTH_USER_PWHASH=""
 ARG NFS_HOMEDIR_SEVER=""
 ARG DESKTOP=""
 ARG OC_DEV_TOOLS=""
 
-ENV LOCAL_AUTH_USER="user" \
-    LOCAL_AUTH_USER_PWHASH="" \
-    guac_username="user" \
+ENV guac_username="user" \
     guac_password_hash="" \
     guac_password_encoding=""
 
@@ -59,4 +55,4 @@ WORKDIR /home/user
 
 EXPOSE 8080
 VOLUME [ "/dev/shm", "/mnt/workspace" ]
-ENTRYPOINT /opt/bin/uid_entrypoint.sh; /opt/bin/guac_setup.py; /usr/bin/supervisord -c /etc/supervisord/supervisord.conf
+ENTRYPOINT /opt/bin/uid_entrypoint.sh; /usr/bin/supervisord -c /etc/supervisord/supervisord.conf
