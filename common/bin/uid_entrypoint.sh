@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# retrieve uid
+USER_ID=$(id -u)
+
 # Generate a password automatically
 PASSWD=$(/opt/bin/genpw.sh)
 PWHASH=$(openssl passwd -1 ${PASSWD})

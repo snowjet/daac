@@ -63,6 +63,7 @@ objects:
         containers:
         - name: daac
           image: daac:latest
+          imagePullPolicy: Always
           ports:
           - containerPort: 8080
           env:
