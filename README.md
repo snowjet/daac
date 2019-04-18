@@ -1,4 +1,5 @@
 # DaaC
+
 Desktop as a Container
 
 Key Features
@@ -6,6 +7,12 @@ Key Features
 * Guacamole
 * XRDP
 * Selectable Desktop (gnome3, mate and xfce4)
+
+## Demo
+
+!['HTML5-DaaC Demo'](demo/HTML5-DaaC.gif)
+
+## Howto
 
 ## Build Arguments
 
