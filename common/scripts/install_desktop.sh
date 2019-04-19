@@ -29,9 +29,4 @@ esac
 
 yum install -y liberation-fonts
 
-# Reduce the image size
-# yum remove -y avahi mate-backgrounds mate-control-center mate-media 
-# mate-notification-daemon mate-power-manager mate-icon-theme mate-themes
-# libmatekbd libmateweather 
-
 # END

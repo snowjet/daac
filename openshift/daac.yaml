@@ -64,6 +64,16 @@ objects:
         - name: daac
           image: daac:latest
           imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 1500m
+              memory: 4Gi
+            requests:
+              cpu: 50m
+              memory: 512Mi
+            volumeMounts:                 
+              - mountPath: /dev/shm
+                name: dshm        
           ports:
           - containerPort: 8080
           env:
@@ -73,6 +83,22 @@ objects:
             value: ${guac_password_hash}
           - name: guac_password_encoding
             value: ${guac_password_encoding}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 20
+            timeoutSeconds: 1
+          livenessProbe:
+            exec:
+              command:
+              - /opt/bin/healthcheck.sh
+            initialDelaySeconds: 20
+            timeoutSeconds: 3
+        volumes:                          
+          - name: dshm
+            emptyDir:
+              medium: Memory
     triggers:
     - type: ConfigChange
     - imageChangeParams:

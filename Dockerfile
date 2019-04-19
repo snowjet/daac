@@ -2,7 +2,6 @@ FROM centos:7
 # FROM registry.access.redhat.com/rhel7/rhel 
 
 ENV container docker
-ENV GUACAMOLE_HOME="/usr/share/tomcat/.guacamole"
 
 ARG IPA_SERVER="" 
 ARG LDAP_BASEDN=""
@@ -53,6 +52,6 @@ USER 10001
 # You need this else X wont work
 WORKDIR /home/user
 
-EXPOSE 8080
+EXPOSE 8080 9001
 VOLUME [ "/dev/shm", "/mnt/workspace" ]
-ENTRYPOINT /opt/bin/uid_entrypoint.sh; /usr/bin/supervisord -c /etc/supervisord/supervisord.conf
+ENTRYPOINT /opt/bin/uid_entrypoint.sh; /usr/bin/supervisord -c /etc/supervisord.conf

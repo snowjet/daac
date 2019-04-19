@@ -10,6 +10,6 @@ chgrp -R 0 /etc/xrdp
 chmod -R g=u /etc/xrdp
 chmod -R g+w /etc/xrdp
 
-cp /tmp/config/supervisord/conf.d/xrdp.conf /etc/supervisord/conf.d/xrdp.conf
+cp /tmp/config/supervisord/conf.d/xrdp.conf /etc/supervisord.d/xrdp.conf
 
 # END
