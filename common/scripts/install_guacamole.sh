@@ -47,6 +47,6 @@ ln -s /etc/sysconfig/guacd /usr/share/tomcat/.guacamole/guacamole.properties
 cp /tmp/config/guacamole/user-mapping.xml /usr/share/tomcat/.guacamole/user-mapping.xml
 chmod 400 /usr/share/tomcat/.guacamole/user-mapping.xml
 
-cp /tmp/config/supervisord/conf.d/guacd.conf /etc/supervisord/conf.d/guacd.conf
+cp /tmp/config/supervisord/conf.d/guacd.conf /etc/supervisord.d/guacd.conf
 
 # END
