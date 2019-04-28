@@ -82,8 +82,6 @@ objects:
             value: ${guac_username}
           - name: guac_password_hash
             value: ${guac_password_hash}
-          - name: guac_password_encoding
-            value: ${guac_password_encoding}
           readinessProbe:
             httpGet:
               path: /
@@ -120,11 +118,7 @@ parameters:
   name: guac_username
   value: user
   required: true
-- description: Password Hash for Guacamole HTTP Login
+- description: Password Hash for Guacamole HTTP Login (default daacpass)
   name: guac_password_hash
-  value: 2865cb20ea1fd3c4fe7c1dfa73505ff1
-  required: true
-- description: Guacamole Password Hash Encoding
-  name: guac_password_encoding
-  value: md5
+  value: 898391538cd98466d33e4c77c5336530
   required: true

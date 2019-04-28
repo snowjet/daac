@@ -1,94 +1,103 @@
 # DaaC
 
-Desktop as a Container
+Run your Desktop within a Conatainer and access it via any HTML5 compliant browser.
 
-Key Features
+**Key Features:**
 
-* Guacamole
-* XRDP
-* Selectable Desktop (gnome3, mate and xfce4)
+* Runs a graphical desktop ontop of OpenShift with default security controls
+* OpenShift creates a random local user account for the desktop to exist within
+* Uses Guacamole for the HTML5 Proxy
+* XRDP is used to spawn the desktop. XRDP allows the desktop match the size of the current window. WHich means if you full screen your browser when logging in you will have a full screen desktop.
+* Build a desktop on Mate (recommended), Gnome3 or XFCE
 
 ## Demo
 
 !['HTML5-DaaC Demo'](demo/HTML5-DaaC.gif)
 
-## Howto
-
-## Build Arguments
-
-If you want ldap auth set these build args:
-* ARG IPA_SERVER="<server name>"
-* ARG LDAP_BASEDN="<ldap base dn>"
-
-If you want a local user set these build args:
-* ARG LOCAL_AUTH_USER="<username>"
-* ARG LOCAL_AUTH_USER_PWHASH=""
-
-If you want nfs home dirs set set this build args:
-* ARG NFS_HOMEDIR_SEVER=""
-
-Set a desktop environment:
-* ARG DESKTOP="<gnome3, mate>"
-
-Install OpenShift Developer Tools
-* ARG OC_DEV_TOOLS=true
-
 ## Howto Build
 
+**Build Arguments**
+
+Set a desktop environment:
+* ARG DESKTOP= [mate | gnome3, xfce]
+
+Install OpenShift Developer Tools
+* ARG OC_DEV_TOOLS: [True | False]
+
+**Buildah Build**
 ```bash
-buildah bud -f <xrdp, guacamole, html5>/Dockerfile \
-            -t <xrdp, guacamole, html5> \
-            --build-arg LOCAL_AUTH_USER_PWHASH=<password hash> --build-arg LOCAL_AUTH_USER=<user> \
-            --build-arg DESKTOP=<mate, gnome3> \
+buildah bud -f Dockerfile \
+            -t html5:latest \
+            --build-arg DESKTOP=mate \
             --build-arg OC_DEV_TOOLS=true \
             --squash --logfile ./buildlog .
 ```
 
-### Docker Build
+**Docker Build**
 For a docker build with guacamole that hooks it all together run.
-
-* You need a hashed password
 
 ```bash
 docker build -f html5/Dockerfile \
-            -t html5 \
-            --build-arg LOCAL_AUTH_USER_PWHASH=<password hash> --build-arg LOCAL_AUTH_USER=<user> \
-            --build-arg OC_DEV_TOOLS=true \
-            --build-arg DESKTOP=<mate, gnome3> .
+             -t html5 \
+             --build-arg OC_DEV_TOOLS=true \
+             --build-arg DESKTOP=mate .
 ```
 
-## HowTo Run
+## HowTo Run in OpenShift
 
-If you are using the autofs mounts you will need to start the container with SYS_ADMIN capabilities, else just run normally.
+**Step 1. Modify the template to select your Container Repository**
 
-* -p exposes the 3389 or 8080 port on the host and forwards it through to the container
-* -dns sets DNS for the container if host is localhost
-* -cap-add run this a privileged container
+I am using quay.io which is awesome! But you can use any repository that your OpenShift cluster can access. The default parameter to overide in the template is DAAC_IMAGE_NAME.
 
-### With autofs home mounts
+```yaml
+parameters:
+- description: Daac Image
+  name: DAAC_IMAGE_NAME
+  value: quay.io/rarm_sa/daac
+```
 
-Mounting directly within in the container requires the container to run as privileged mode
+**Step 2. Import Template into OpenShift**
+
+Import the template fromt he repo:
 
 ```bash
-podman run -p 8080:8080 --dns 8.8.8.8 -d --cap-add SYS_ADMIN -v /sys/fs/cgroup:/sys/fs/cgroup:ro  localhost/<xrdp, guacamole, html5>
+cd daac
+oc apply -f openshift/daac.yml -n openshift
 ```
+
+**Step 3. Create the Applicaiton**
+
+Create the application from the imported template. Note you need to provide a password hash for the login. 'echo -n <password> | md5sum' will provide an insecure md5 hash'
 
 ```bash
-docker run -p 127.0.0.1:8080:8080 -d --cap-add SYS_ADMIN -v /sys/fs/cgroup:/sys/fs/cgroup:ro <xrdp, guacamole, html5>
+oc new-app --name mydaac --template=daac \
+    -p guac_username="user" \
+    -p guac_password_hash="password as a hash" \
+    -p DAAC_IMAGE_NAME="locaiton of the container image"
 ```
 
-### Non-Privileged
+**Step 4. Connect to the route**
+
+Browse to the route. You can find the route address with:
 
 ```bash
-podman run -p 8080:8080 --dns 8.8.8.8 -d localhost/html5
+oc get route
+NAME      HOST/PORT                      PATH      SERVICES   PORT      TERMINATION
+rdp       mydaac.apps.ocp.example.com    daac       <all>     edge          None
 ```
 
-## How to access
+Browse to: https://mydaac.apps.ocp.example.com
 
-### Guacamole
+## HowTo Run in Locally
 
-Browse to: http://127.0.0.1:8080/root
+You can run the container locally via the command below. Note you need to provide a password hash for the login. 'echo -n <password> | md5sum' will provide an insecure md5 hash'
 
-## How to Run on MiniShift
-[MiniShift File](documentation/Run_on_minishift.md)
-[OpenShift File](documentation/Run_on_OpenShift_Cluster.md) - not fully working yet
+```bash
+podman run -p 8080:8080 --dns 8.8.8.8 -d  \
+    -e guac_username="user" \
+    -e guac_password_hash="password as a hash" \
+    localhost/html5
+```
+
+Browse to: http://127.0.0.1:8080/
+

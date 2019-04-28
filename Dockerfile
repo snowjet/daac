@@ -10,8 +10,7 @@ ARG DESKTOP=""
 ARG OC_DEV_TOOLS=""
 
 ENV guac_username="user" \
-    guac_password_hash="" \
-    guac_password_encoding=""
+    guac_password_hash=""
 
 USER root
 
