@@ -1,4 +1,4 @@
-# Minishift
+# OpenShift
 The basic steps
 * Prerequisites
 * Build the container
@@ -15,6 +15,12 @@ Login: docker login -u (user) (exposed_docker_registry_route)
 You may have to add the exposed url to the insecure registries if using Docker. Without this you will get a certificate error.
 
 Assumption: Your project is called myproject
+
+## Use OpenShift to Build Container and Deploy
+
+```bash
+cat build.env | oc new-app https://github.com/snowjet/DaaC.git#OpenShift-Dev --build-env-file=-
+```
 
 ## Build the container
 The tag is important, this assumes you used html5

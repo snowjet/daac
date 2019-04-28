@@ -1,8 +1,16 @@
-# User local auth
-# Set the below vars in ARG within the Dockerfile
-# LOCAL_AUTH_USER=""
-# LOCAL_AUTH_USER_PWHASH=""
+# Create Placeholder for Local User
 
-if [[ ! -z $LOCAL_AUTH_USER  ]]; then
-    useradd ${LOCAL_AUTH_USER} --create-home --password "${LOCAL_AUTH_USER_PWHASH}"
-fi
+mkdir -p /home/user
+chown -R root:root /home/user
+
+useradd user -u 10001 -g 0 -d /home/user -G wheel
+
+chmod 400 /etc/shadow
+cp /etc/shadow /etc/shadow.template
+chmod 000 /etc/shadow /etc/shadow.template
+
+chmod 770 /home/user
+chown -R user:0 /home/user
+chmod -R g+rw /etc/passwd
+
+sed "s@user:x:10001:@user:x:\${USER_ID}:@g" /etc/passwd > /etc/passwd.template

@@ -4,6 +4,9 @@
 .LSOverride
 .vscode
 
+# do not cache the build.env file for oc new-app
+build.env
+
 # Icon must end with two \r
 Icon
 
