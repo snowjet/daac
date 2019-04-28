@@ -1,6 +1,8 @@
-# DaaC
+# DCaaS - Desktop Container as a Service
 
-Run your Desktop within a Conatainer and access it via any HTML5 compliant browser.
+## Goal
+
+Essentially create a Container Based VDI system running on OpenShift.
 
 **Key Features:**
 
