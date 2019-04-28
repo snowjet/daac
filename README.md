@@ -1,6 +1,8 @@
-# DaaC
+# DCaaS - Desktop Container as a Service
 
-Run your Desktop within a Conatainer and access it via any HTML5 compliant browser.
+## Goal
+
+Essentially create a Container Based VDI system running on OpenShift.
 
 **Key Features:**
 
@@ -18,11 +20,10 @@ Run your Desktop within a Conatainer and access it via any HTML5 compliant brows
 
 **Build Arguments**
 
-Set a desktop environment:
-* ARG DESKTOP= [mate | gnome3, xfce]
-
-Install OpenShift Developer Tools
-* ARG OC_DEV_TOOLS: [True | False]
+| Argument | Description                   | Value                  |
+|----------|:------------------------------|:-----------------------|
+| DESKTOP  | Selected Main Desktop Session | mate, gnome3 or xfce]  |
+| OC_DEV_TOOLS | Install OpenShift Developer Tools | True or False  |
 
 **Buildah Build**
 ```bash
@@ -101,3 +102,8 @@ podman run -p 8080:8080 --dns 8.8.8.8 -d  \
 
 Browse to: http://127.0.0.1:8080/
 
+## License
+
+GNU General Public License v3.0
+
+See [COPYING](COPYING) to see the full text.
