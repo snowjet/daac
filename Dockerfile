@@ -1,5 +1,5 @@
 FROM centos:7
-# FROM registry.access.redhat.com/rhel7/rhel 
+# FROM registry.access.redhat.com/ubi7/ubi
 
 ENV container docker
 

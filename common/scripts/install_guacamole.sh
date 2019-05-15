@@ -30,22 +30,16 @@ yum --enablerepo=epel-testing install -y guacd libguac{,-client*}
 
 ## Install Client ##
 
-mkdir -p /usr/share/tomcat/.guacamole
+mkdir -p /etc/guacamole
 
 rm -rf /var/lib/tomcat/webapps/*
 wget -q -O /var/lib/tomcat/webapps/ROOT.war https://www.apache.org/dist/guacamole/1.0.0/binary/guacamole-${GUAC_VER}.war
 
-cat << EOF > /etc/sysconfig/guacd
-guacd-hostname:     localhost
-guacd-port:         4822
-user-mapping:       /usr/share/tomcat/.guacamole/user-mapping.xml
-auth-provider:      net.sourceforge.guacamole.net.basic.BasicFileAuthenticationProvider
-EOF
+cp /tmp/config/guacamole/guacamole.properties /etc/sysconfig/guacd
+ln -s /etc/sysconfig/guacd /etc/guacamole/guacamole.properties
 
-ln -s /etc/sysconfig/guacd /usr/share/tomcat/.guacamole/guacamole.properties
-
-cp /tmp/config/guacamole/user-mapping.xml /usr/share/tomcat/.guacamole/user-mapping.xml
-chmod 400 /usr/share/tomcat/.guacamole/user-mapping.xml
+cp /tmp/config/guacamole/user-mapping.xml /etc/guacamole/user-mapping.xml
+chmod 660 /etc/guacamole/user-mapping.xml
 
 cp /tmp/config/supervisord/conf.d/guacd.conf /etc/supervisord.d/guacd.conf
 
