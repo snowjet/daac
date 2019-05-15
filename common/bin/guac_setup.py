@@ -11,7 +11,7 @@ Set these environment variables to update the guacamole user-mapping file
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--vnc_pass", default="")
-parser.add_argument("--user_mapping", default="/usr/share/tomcat/.guacamole/user-mapping.xml")
+parser.add_argument("--user_mapping", default="/etc/guacamole/user-mapping.xml")
 args, unknown_args = parser.parse_known_args()
 
 # Set to defaults if env vars are not set
