@@ -14,7 +14,7 @@ Essentially create a Container Based VDI system running on OpenShift.
 
 ## Demo
 
-!['HTML5-DaaC Demo'](../demo/HTML5-DaaC.gif)
+!['HTML5-DaaC Demo'](https://raw.githubusercontent.com/snowjet/DaaC/master/demo/HTML5-DaaC.gif)
 
 ## Howto Build
 
