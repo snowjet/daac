@@ -1,4 +1,5 @@
-FROM centos:7
+FROM fedora:latest
+# FROM centos:7
 # FROM registry.access.redhat.com/ubi7/ubi
 
 ENV container docker
@@ -18,6 +19,7 @@ ADD common/config /tmp/config
 ADD common/bin /opt/bin
 
 ADD common/scripts/ /tmp/
+RUN yum install findutils -y
 RUN find /tmp/ -name '*.sh' -exec chmod a+x {} +
 
 RUN /tmp/00_install_repos.sh

@@ -106,8 +106,4 @@ Browse to: http://127.0.0.1:8080/
 
 GNU General Public License v3.0
 
-See [COPYING](COPYING) to see the full text. 
-
-### WebSite
-
-https://snowjet.github.io/DaaC/
+See [COPYING](COPYING) to see the full text.

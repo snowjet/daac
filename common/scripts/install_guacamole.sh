@@ -21,12 +21,13 @@ yum install -y dejavu-sans-mono-fonts tomcat
 # tar zxf guacamole-server-${GUAC_VER}.tar.gz
 # cd guacamole-server-${GUAC_VER}
 # ./configure --with-systemd-dir=/lib/systemd/system
-# make 
+# make
 # make install
 # ldconfig
 # systemctl daemon-reload
 
-yum --enablerepo=epel-testing install -y guacd libguac{,-client*}
+# yum --enablerepo=epel-testing install -y guacd libguac{,-client*}
+yum install -y guacd libguac{,-client*}
 
 ## Install Client ##
 
