@@ -1,43 +1,33 @@
-FROM fedora:latest
-# FROM centos:7
+FROM centos:7
+# FROM fedora:latest
 # FROM registry.access.redhat.com/ubi7/ubi
+
+LABEL io.openshift.expose-services="3389:tcp"
 
 ENV container docker
 
-ARG IPA_SERVER="" 
-ARG LDAP_BASEDN=""
-ARG NFS_HOMEDIR_SEVER=""
 ARG DESKTOP=""
 ARG OC_DEV_TOOLS=""
 
-ENV guac_username="user" \
-    guac_password_hash=""
+ENV XRDP_PASSWORD="user"
 
 USER root
 
 ADD common/config /tmp/config
 ADD common/bin /opt/bin
-
 ADD common/scripts/ /tmp/
+
 RUN yum install findutils -y
 RUN find /tmp/ -name '*.sh' -exec chmod a+x {} +
 
 RUN /tmp/00_install_repos.sh
 RUN /tmp/install_supervisord.sh
 
-RUN /tmp/install_tools.sh
 RUN /tmp/install_xrdp.sh
 RUN /tmp/install_desktop.sh
-RUN /tmp/install_guacamole.sh
-RUN /tmp/install_oc_dev_tools.sh
 RUN /tmp/add_local_user.sh
-RUN /tmp/ipa.sh
 
 RUN /tmp/99_OpenShift.sh
-
-RUN mkdir -p /mnt/workspace
-RUN chmod 755 /mnt/workspace
-RUN chgrp -R 0 /mnt/workspace && chmod -R g=u /mnt/workspace 
 
 # Final Clean
 RUN \
@@ -53,6 +43,6 @@ USER 10001
 # You need this else X wont work
 WORKDIR /home/user
 
-EXPOSE 8080 9001
-VOLUME [ "/dev/shm", "/mnt/workspace" ]
-ENTRYPOINT /opt/bin/uid_entrypoint.sh; /usr/bin/supervisord -c /etc/supervisord.conf
+EXPOSE 3389
+VOLUME [ "/dev/shm" ]
+ENTRYPOINT /opt/bin/uid_entrypoint.sh xrdp; /usr/bin/supervisord -c /etc/supervisord.conf

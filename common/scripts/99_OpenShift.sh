@@ -20,8 +20,10 @@ chmod -R g+w /home
 /opt/bin/fix_permissions.sh /var/run
 /opt/bin/fix_permissions.sh /var/log
 /opt/bin/fix_permissions.sh /home/user
-/opt/bin/fix_permissions.sh /var/lib/tomcat
-/opt/bin/fix_permissions.sh /usr/share/tomcat/
+
+# Guac Specific
+#/opt/bin/fix_permissions.sh /var/lib/tomcat
+#/opt/bin/fix_permissions.sh /usr/share/tomcat/
 
 # OpenShift Tweaks may not be needed
 # touch /run/dbus/messagebus.pid

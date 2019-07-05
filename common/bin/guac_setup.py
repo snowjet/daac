@@ -20,8 +20,8 @@ if environ.get('guac_username'):
 else:
     guac_username = "user"
 
-if environ.get('guac_password_hash'):
-    guac_password_hash = environ['guac_password_hash']
+if environ.get('GUAC_PWHASH'):
+    guac_password_hash = environ['GUAC_PWHASH']
 else:
     guac_password_hash = "5f4dcc3b5aa765d61d8327deb882cf99"
 
