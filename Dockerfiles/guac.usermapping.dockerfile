@@ -7,7 +7,9 @@ ARG GUACAMOLE_VERSION='1.0.0'
 ARG POSTGRES_CONNECTOR_VERSION='42.2.6'
 
 # Example Environment
-# ENV POSTGRES_DATABASE=guacamole_db  \
+# ENV XRDP_PASSWORD="user" \
+#     GUAC_PWHASH="5f4dcc3b5aa765d61d8327deb882cf99" \
+#     POSTGRES_DATABASE=guacamole_db  \
 #     POSTGRES_USER=guacamole_user    \
 #     POSTGRES_PASSWORD=some_password \        
 #     POSTGRES_DATABASE_FILE=/run/secrets/db \
@@ -35,6 +37,8 @@ RUN rm -rf /deployments/* && \
     rm -rf guacamole-auth-jdbc* && \
     curl -L -o /etc/guacamole/lib/postgres-connector.jar https://jdbc.postgresql.org/download/postgresql-${POSTGRES_CONNECTOR_VERSION}.jar && \
     cp /tmp/config/guacamole/guacamole.properties /etc/guacamole/guacamole.properties && \
+    cp /tmp/config/guacamole/user-mapping.xml /etc/guacamole/user-mapping.xml && \
+    chmod 660 /etc/guacamole/user-mapping.xml && \
     chown jboss:root -R /deployments /etc/guacamole && \
     chgrp -R 0 /etc/guacamole /deployments && chmod -R g=u /etc/guacamole /deployments && \
     ls -alR /etc/guacamole
@@ -50,5 +54,5 @@ RUN \
 
 USER 10001
 EXPOSE 8080
-ENTRYPOINT /opt/jws-5.0/tomcat/bin/launch.sh
+ENTRYPOINT /opt/bin/uid_entrypoint.sh guac; /opt/jws-5.0/tomcat/bin/launch.sh
 

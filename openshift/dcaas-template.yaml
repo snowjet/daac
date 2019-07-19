@@ -1,0 +1,309 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: dcaas
+  app: dcaas-ephemeral
+metadata:
+  annotations:
+    description: Desktop Containers as a Service
+    iconClass: icon-tomcat
+    tags: dcaas
+  creationTimestamp: null
+  name: dcaas
+objects:
+- apiVersion: "v1"
+  kind: "ImageStream"
+  metadata:
+    name: "guac"
+  spec:
+    dockerImageRepository: quay.io/rarm_sa/guac
+
+- apiVersion: "v1"
+  kind: "ImageStream"
+  metadata:
+    name: "guacd"
+  spec:
+    dockerImageRepository: quay.io/rarm_sa/guacd
+
+- apiVersion: "v1"
+  kind: "ImageStream"
+  metadata:
+    name: "gdesk"
+  spec:
+    dockerImageRepository: quay.io/rarm_sa/gdesk
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: guacd
+  spec:
+    ports:
+    - port: 4822
+      protocol: TCP
+      targetPort: 4822
+    selector:
+      name: guacd
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: postgres
+  spec:
+    ports:
+    - port: 5432
+      protocol: TCP
+      targetPort: 5432
+    selector:
+      name: postgres
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: guac
+  spec:
+    ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      name: guac
+
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: guac
+  spec:
+    tls:
+      termination: edge
+    to:
+      kind: Service
+      name: guac
+      weight: 100
+    wildcardPolicy: None
+
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    annotations:
+      template.openshift.io/expose-database_name: '{.data[''database-name'']}'
+      template.openshift.io/expose-password: '{.data[''database-password'']}'
+      template.openshift.io/expose-username: '{.data[''database-user'']}'
+    name: postgres
+  stringData:
+    database-name: ${POSTGRES_DATABASE}
+    database-password: ${POSTGRES_PASSWORD}
+    database-user: ${POSTGRES_USER}
+
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Guacamole Daemon
+    name: guacd
+  spec:
+    replicas: 1
+    selector:
+      name: guacd
+    strategy:
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          name: guacd
+        name: guacd
+      spec:
+        containers:
+        - name: guacd
+          image: guacd:latest
+          imagePullPolicy: Always    
+          ports:
+          - name: guacd-port
+            containerPort: 4822
+          readinessProbe:
+            tcpSocket:
+              port: guacd-port
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: guacd-port
+            initialDelaySeconds: 15
+            periodSeconds: 20
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - guacd
+        from:
+          kind: ImageStreamTag
+          name: guacd:latest
+      type: ImageChange
+
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      template.alpha.openshift.io/wait-for-ready: "true"
+    name: postgres
+  spec:
+    replicas: 1
+    selector:
+      name: postgres
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: postgres
+      spec:
+        containers:
+        - capabilities: {}
+          env:
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: database-user
+                name: postgres
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-password
+                name: postgres
+          - name: POSTGRESQL_DATABASE
+            valueFrom:
+              secretKeyRef:
+                key: database-name
+                name: postgres
+          image: ' '
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+              - /usr/libexec/check-container
+              - --live
+            initialDelaySeconds: 120
+            timeoutSeconds: 10
+          name: postgresql
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /usr/libexec/check-container
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 512Mi
+          securityContext:
+            capabilities: {}
+            privileged: false
+          terminationMessagePath: /dev/termination-log
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: postgres-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        volumes:
+        - emptyDir:
+            medium: ""
+          name: postgres-data
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - postgresql
+        from:
+          kind: ImageStreamTag
+          name: postgresql:9.6
+          namespace: openshift
+        lastTriggeredImage: ""
+      type: ImageChange
+    - type: ConfigChange
+
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Guacamole Client
+    name: guac
+  spec:
+    replicas: 1
+    selector:
+      name: guac
+    strategy:
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          name: guac
+        name: guac
+      spec:
+        containers:
+        - name: guac
+          image: guac:latest
+          imagePullPolicy: Always    
+          ports:
+          - name: guac-port
+            containerPort: 8080
+          env:
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                key: database-user
+                name: postgres
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-password
+                name: postgres
+          - name: POSTGRES_DATABASE
+            valueFrom:
+              secretKeyRef:
+                key: database-name
+                name: postgres
+          - name: GUACD_HOSTNAME
+            value: guacd
+          - name: GUACD_PORT
+            value: '4822'
+          readinessProbe:
+            tcpSocket:
+              port: guac-port
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: guac-port
+            initialDelaySeconds: 15
+            periodSeconds: 20
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - guac
+        from:
+          kind: ImageStreamTag
+          name: guac:latest
+      type: ImageChange
+
+parameters:
+- description: POSTGRES username
+  name: POSTGRES_USER
+  value: guac
+  required: true
+- description: POSTGRES password
+  name: POSTGRES_PASSWORD
+  value: guac_pass
+  required: true
+- description: POSTGRES database name
+  name: POSTGRES_DATABASE
+  value: guacamole_db
+  required: true
+- description: Guacadmin Password
+  name: GUACADMIN_PASSWORD
+  value: guacadmin
+  required: true
+
