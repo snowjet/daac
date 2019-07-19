@@ -289,6 +289,101 @@ objects:
           name: guac:latest
       type: ImageChange
 
+- kind: BuildConfig
+  apiVersion: v1
+  metadata:
+    name: guac-api
+    annotations:
+      description: Defines how to build the application
+      template.alpha.openshift.io/wait-for-ready: "true"
+  labels:
+      app: guac-api
+  name: guac-api
+  spec:
+    source:
+      git:
+        uri: https://github.com/snowjet/daac-broker.git
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: python:3.6
+          namespace: openshift
+      type: Source
+    successfulBuildsHistoryLimit: 5
+    triggers:
+    - type: ConfigChange
+    - imageChange: {}
+      type: ImageChange
+
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: guac-api
+    annotations:
+      template.alpha.openshift.io/wait-for-ready: "true"
+  name: guac-api
+  labels:
+      app: guac-api
+  spec:
+    replicas: 1
+    selector:
+      name: guac-api
+    strategy:
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          name: guac-api
+        name: guac-api
+      spec:
+        containers:
+        - name: guac-api
+          image: guac-api:latest
+          imagePullPolicy: Always    
+          ports:
+          - name: guac-api-port
+            containerPort: 8080
+          env:
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                key: database-user
+                name: postgres
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-password
+                name: postgres
+          - name: POSTGRES_DATABASE
+            valueFrom:
+              secretKeyRef:
+                key: database-name
+                name: postgres
+          readinessProbe:
+            tcpSocket:
+              port: guac-api-port
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: guac-api-port
+            initialDelaySeconds: 15
+            periodSeconds: 20
+        serviceAccount: guacrobot
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - daac-api
+        from:
+          kind: ImageStreamTag
+          name: daac-api:latest
+      type: ImageChange
+
+
 parameters:
 - description: POSTGRES username
   name: POSTGRES_USER

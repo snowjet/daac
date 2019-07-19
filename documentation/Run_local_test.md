@@ -56,6 +56,4 @@ docker run --name guac-api --link postgres:postgres \
     -e POSTGRES_DATABASE=${POSTGRES_DATABASE}  \
     -e POSTGRES_USER=${POSTGRES_USER}    \
     -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
-    -e GUACD_HOSTNAME=${GUACD_HOSTNAME} \
-    -e GUACD_PORT=${GUACD_PORT} \
     -d -p 8080:8080 guac
