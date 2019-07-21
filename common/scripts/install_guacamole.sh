@@ -27,7 +27,7 @@ yum install -y dejavu-sans-mono-fonts tomcat
 # systemctl daemon-reload
 
 # yum --enablerepo=epel-testing install -y guacd libguac{,-client*}
-yum install -y guacd libguac{,-client*}
+yum install -y guacd libguac{,-client*} freerdp-plugins
 
 ## Install Client ##
 
