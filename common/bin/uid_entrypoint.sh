@@ -26,7 +26,8 @@ set_xrdp() {
 
 set_guac() {
     # Update Guacamole Server
-    /opt/bin/guac_setup.py --vnc_pass "${PASSWD}"
+    # user if local user-mapping is required
+    # /opt/bin/guac_setup.py --vnc_pass "${PASSWD}"
     /opt/bin/guac_setup.sh
 } 
 

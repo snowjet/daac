@@ -32,6 +32,11 @@ objects:
   spec:
     dockerImageRepository: quay.io/rarm_sa/gdesk
 
+- apiVersion: "v1"
+  kind: "ImageStream"
+  metadata:
+    name: "daac-api"
+
 - apiVersion: v1
   kind: Service
   metadata:
@@ -67,6 +72,18 @@ objects:
       targetPort: 8080
     selector:
       name: guac
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: daac-api
+  spec:
+    ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      name: daac-api      
 
 - apiVersion: v1
   kind: Route
@@ -219,7 +236,6 @@ objects:
           kind: ImageStreamTag
           name: postgresql:9.6
           namespace: openshift
-        lastTriggeredImage: ""
       type: ImageChange
     - type: ConfigChange
 
@@ -268,6 +284,8 @@ objects:
             value: guacd
           - name: GUACD_PORT
             value: '4822'
+          - name: POSTGRES_HOSTNAME
+            value: postgres
           readinessProbe:
             tcpSocket:
               port: guac-port
@@ -292,14 +310,18 @@ objects:
 - kind: BuildConfig
   apiVersion: v1
   metadata:
-    name: guac-api
+    name: daac-api
     annotations:
       description: Defines how to build the application
       template.alpha.openshift.io/wait-for-ready: "true"
   labels:
-      app: guac-api
-  name: guac-api
+      app: daac-api
+  name: daac-api
   spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: 'daac-api:latest'    
     source:
       git:
         uri: https://github.com/snowjet/daac-broker.git
@@ -314,36 +336,36 @@ objects:
     successfulBuildsHistoryLimit: 5
     triggers:
     - type: ConfigChange
-    - imageChange: {}
+    - imageChange:
       type: ImageChange
 
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
-    name: guac-api
+    name: daac-api
     annotations:
       template.alpha.openshift.io/wait-for-ready: "true"
-  name: guac-api
+  name: daac-api
   labels:
-      app: guac-api
+      app: daac-api
   spec:
     replicas: 1
     selector:
-      name: guac-api
+      name: daac-api
     strategy:
       type: Rolling
     template:
       metadata:
         labels:
-          name: guac-api
-        name: guac-api
+          name: daac-api
+        name: daac-api
       spec:
         containers:
-        - name: guac-api
-          image: guac-api:latest
+        - name: daac-api
+          image: daac-api:latest
           imagePullPolicy: Always    
           ports:
-          - name: guac-api-port
+          - name: daac-api-port
             containerPort: 8080
           env:
           - name: POSTGRES_USER
@@ -363,12 +385,12 @@ objects:
                 name: postgres
           readinessProbe:
             tcpSocket:
-              port: guac-api-port
+              port: daac-api-port
             initialDelaySeconds: 5
             periodSeconds: 10
           livenessProbe:
             tcpSocket:
-              port: guac-api-port
+              port: daac-api-port
             initialDelaySeconds: 15
             periodSeconds: 20
         serviceAccount: guacrobot

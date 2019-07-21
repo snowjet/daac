@@ -50,5 +50,5 @@ RUN \
 
 USER 10001
 EXPOSE 8080
-ENTRYPOINT /opt/jws-5.0/tomcat/bin/launch.sh
+ENTRYPOINT /opt/bin/guac_setup.sh; /opt/jws-5.0/tomcat/bin/launch.sh
 
