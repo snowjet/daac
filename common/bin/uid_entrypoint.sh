@@ -5,18 +5,17 @@ USERNAME=${USERNAME}
 USER_ID=$(id -u)
 
 # Use password from env
-PASSWD=${XRDP_PASSWORD}
+PASSWORD_HASH=${PASSWORD_HASH}
 
 set_xrdp() {
     # Update XRDP
-    PWHASH=$(openssl passwd -1 ${PASSWD})
     #sed "s@password=\${PASSWORD}@password=${PASSWD}@g" /etc/xrdp/xrdp-template.ini > /etc/xrdp/xrdp.ini
     #sed "s@user=\${USERNAME}@user=${USERNAME}@g" /etc/xrdp/xrdp-template.ini > /etc/xrdp/xrdp.ini
 
     # Update user uid and password
     sed "s@user:x:\${USER_ID}:@user:x:${USER_ID}:@g" /etc/passwd.template > /etc/passwd
     chmod 660 /etc/shadow /etc/shadow.template
-    sed "s@user:\!\!:@user:${PWHASH}:@g" /etc/shadow.template > /etc/shadow
+    sed "s@user:\!\!:@user:${PASSWORD_HASH}:@g" /etc/shadow.template > /etc/shadow
     chmod 000 /etc/shadow /etc/shadow.template
 
     chown -R $(id -u):0 /home/user
