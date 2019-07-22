@@ -239,8 +239,14 @@ END
 associate_postgresql() {
 
     # Use linked container if specified
-    if [ -n "$POSTGRES_NAME" ]; then
-        POSTGRES_HOSTNAME="$POSTGRES_PORT_5432_TCP_ADDR"
+    # if [ -n "$POSTGRES_NAME" ]; then
+    #    POSTGRES_HOSTNAME="$POSTGRES_PORT_5432_TCP_ADDR"
+    #    POSTGRES_PORT="$POSTGRES_PORT_5432_TCP_PORT"
+    # fi
+
+    # OpenShift 
+    if [ -n "$POSTGRES_HOSTNAME" ]; then
+        POSTGRES_HOSTNAME="$POSTGRES_HOSTNAME"
         POSTGRES_PORT="$POSTGRES_PORT_5432_TCP_PORT"
     fi
 
@@ -386,8 +392,14 @@ END
 }
 
 # Use linked container for guacd if specified
-if [ -n "$GUACD_NAME" ]; then
-    GUACD_HOSTNAME="$GUACD_PORT_4822_TCP_ADDR"
+# if [ -n "$GUACD_NAME" ]; then
+#    GUACD_HOSTNAME="$GUACD_PORT_4822_TCP_ADDR"
+#    GUACD_PORT="$GUACD_PORT_4822_TCP_PORT"
+#fi
+
+# OpenShift
+if [ -n "$GUACD_HOSTNAME" ]; then
+    GUACD_HOSTNAME="$GUACD_HOSTNAME"
     GUACD_PORT="$GUACD_PORT_4822_TCP_PORT"
 fi
 
