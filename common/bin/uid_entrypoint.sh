@@ -10,7 +10,7 @@ PASSWD=${XRDP_PASSWORD}
 set_xrdp() {
     # Update XRDP
     PWHASH=$(openssl passwd -1 ${PASSWD})
-    sed "s@password=\${PASSWORD}@password=${PASSWD}@g" /etc/xrdp/xrdp-template.ini > /etc/xrdp/xrdp.ini
+    #sed "s@password=\${PASSWORD}@password=${PASSWD}@g" /etc/xrdp/xrdp-template.ini > /etc/xrdp/xrdp.ini
     #sed "s@user=\${USERNAME}@user=${USERNAME}@g" /etc/xrdp/xrdp-template.ini > /etc/xrdp/xrdp.ini
 
     # Update user uid and password
