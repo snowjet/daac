@@ -384,7 +384,9 @@ objects:
                 key: database-name
                 name: postgres
           - name: LOG_LEVEL
-            value: INFO                
+            value: INFO  
+          - name: APP_HOME
+            value: app              
           readinessProbe:
             tcpSocket:
               port: daac-api-port

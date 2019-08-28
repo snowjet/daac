@@ -46,9 +46,9 @@ docker build -f html5/Dockerfile \
 
 ## HowTo Run in OpenShift
 
-**Step 1. Modify the template to select your Container Repository**
+**Prerequisites. Modify the template to select your Container Repository**
 
-I am using quay.io which is awesome! But you can use any repository that your OpenShift cluster can access. The default parameter to overide in the template is DAAC_IMAGE_NAME.
+I am using quay.io which is awesome! But you can use any repository that your OpenShift cluster can access. The default parameter to override in the template is DAAC_IMAGE_NAME.
 
 ```yaml
 parameters:
@@ -56,6 +56,28 @@ parameters:
   name: DAAC_IMAGE_NAME
   value: quay.io/rarm_sa/daac
 ```
+
+**Step 1. Create the SVC account**
+
+Todo:
+* need to reduce the access level for this service account.
+
+```bash
+oc create serviceaccount guacrobot
+
+oc policy add-role-to-user admin -z guacrobot
+
+# Check Bindings
+oc get rolebindings
+NAME                    ROLE                    USERS                                   GROUPS                        SERVICE ACCOUNTS   SUBJECTS
+admin                   /admin                  snowjet
+admin-0                 /admin                                                                                        guacrobot
+system:deployers        /system:deployer                                                                              deployer
+system:image-builders   /system:image-builder                                                                         builder
+system:image-pullers    /system:image-puller                                            system:serviceaccounts:guac
+
+```
+
 
 **Step 2. Import Template into OpenShift**
 
