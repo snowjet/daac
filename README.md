@@ -59,22 +59,19 @@ parameters:
 
 **Step 2. Import Template into OpenShift**
 
-Import the template fromt he repo:
+Import the template from the repo:
 
 ```bash
-cd daac
-oc apply -f openshift/daac.yml -n openshift
+oc apply -f openshift/daac-template.yml
 ```
 
 **Step 3. Create the Applicaiton**
 
-Create the application from the imported template. Note you need to provide a password hash for the login. 'echo -n <password> | md5sum' will provide an insecure md5 hash'
-
+Create the application from the imported template. The two passwords which should be set and unqiue are for Postgres and Guacamole Admin
 ```bash
-oc new-app --name mydaac --template=daac \
-    -p guac_username="user" \
-    -p guac_password_hash="password as a hash" \
-    -p DAAC_IMAGE_NAME="locaiton of the container image"
+oc new-app --name mydaac --template=dcaas \
+    -p POSTGRES_PASSWORD="guac_pass" \
+    -p GUACADMIN_PASSWORD="guacadmin"
 ```
 
 **Step 4. Connect to the route**
@@ -91,14 +88,55 @@ Browse to: https://mydaac.apps.ocp.example.com
 
 ## HowTo Run in Locally
 
-You can run the container locally via the command below. Note you need to provide a password hash for the login. 'echo -n <password> | md5sum' will provide an insecure md5 hash'
+You can run the container locally via the command below. You need a minimum of 3 containers. The broker wont work, as it requires and OpenShift cluster to create services, routes and spin up desktop containers.
 
-```bash
-podman run -p 8080:8080 --dns 8.8.8.8 -d  \
-    -e guac_username="user" \
-    -e guac_password_hash="password as a hash" \
-    localhost/html5
-```
+### Build Local Containers
+
+docker build -f Dockerfiles/guac.dockerfile -t guac .
+docker build -f Dockerfiles/guacd.dockerfile -t guacd .
+docker build -f Dockerfiles/desktop.dockerfile -t gdesk .
+docker build -f Dockerfiles/pgsql.dockerfile -t pgsql .
+
+### Run and Link Docker Files
+
+export XRDP_PASSWORD='KL3ECRd9dd68xFsZ'
+
+export GUACD_HOSTNAME='guacd'
+export GUACD_PORT='4822'
+
+export POSTGRES_HOST='127.0.0.1'
+
+export POSTGRES_USER='guac'
+export POSTGRES_PASSWORD='guac_pass'
+export POSTGRES_DATABASE='guacamole_db'
+
+docker run --name desktop \
+    -e XRDP_PASSWORD=${XRDP_PASSWORD} \
+    -d -p 3389:3389 desktop
+
+docker run --name guacd --link desktop:desktop \
+    -d -p 4822:4822 guacd
+
+docker run --name postgres \
+    -e POSTGRESQL_USER=${POSTGRES_USER} \
+    -e POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD} \
+    -e POSTGRESQL_DATABASE=${POSTGRES_DATABASE} \
+    -d -p 5432:5432 registry.redhat.io/rhscl/postgresql-96-rhel7
+
+docker run --name guac --link guacd:guacd \
+    --link postgres:postgres \
+    -e POSTGRES_DATABASE=${POSTGRES_DATABASE}  \
+    -e POSTGRES_USER=${POSTGRES_USER}    \
+    -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+    -e GUACD_HOSTNAME=${GUACD_HOSTNAME} \
+    -e GUACD_PORT=${GUACD_PORT} \
+    -d -p 8080:8080 guac
+
+docker run --name guac-api --link postgres:postgres \
+    -e POSTGRES_DATABASE=${POSTGRES_DATABASE}  \
+    -e POSTGRES_USER=${POSTGRES_USER}    \
+    -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+    -d -p 8080:8080 guac
 
 Browse to: http://127.0.0.1:8080/
 
