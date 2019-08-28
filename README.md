@@ -131,6 +131,7 @@ export POSTGRES_HOST='127.0.0.1'
 export POSTGRES_USER='guac'
 export POSTGRES_PASSWORD='guac_pass'
 export POSTGRES_DATABASE='guacamole_db'
+export POSTGRES_SERVICE_PORT='5432'
 
 docker run --name desktop \
     -e XRDP_PASSWORD=${XRDP_PASSWORD} \
