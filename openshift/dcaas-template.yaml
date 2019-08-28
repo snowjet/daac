@@ -383,6 +383,8 @@ objects:
               secretKeyRef:
                 key: database-name
                 name: postgres
+          - name: LOG_LEVEL
+            value: INFO                
           readinessProbe:
             tcpSocket:
               port: daac-api-port
