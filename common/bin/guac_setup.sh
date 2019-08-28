@@ -247,14 +247,14 @@ associate_postgresql() {
     # OpenShift 
     if [ -n "$POSTGRES_HOSTNAME" ]; then
         POSTGRES_HOSTNAME="$POSTGRES_HOSTNAME"
-        POSTGRES_PORT="$POSTGRES_PORT_5432_TCP_PORT"
+        POSTGRES_SERVICE_PORT="$POSTGRES_PORT_5432_TCP_PORT"
     fi
 
     # Use default port if none specified
-    POSTGRES_PORT="${POSTGRES_PORT-5432}"
+    POSTGRES_SERVICE_PORT="${POSTGRES_SERVICE_PORT-5432}"
 
     # Verify required connection information is present
-    if [ -z "$POSTGRES_HOSTNAME" -o -z "$POSTGRES_PORT" ]; then
+    if [ -z "$POSTGRES_HOSTNAME" -o -z "$POSTGRES_SERVICE_PORT" ]; then
         cat <<END
 FATAL: Missing POSTGRES_HOSTNAME or "postgres" link.
 -------------------------------------------------------------------------------
@@ -270,7 +270,7 @@ If using a PostgreSQL database, you must either:
                        corresponding link, this environment variable is
                        *REQUIRED*.
 
-    POSTGRES_PORT      The port on which the PostgreSQL server is listening for
+    POSTGRES_SERVICE_PORT      The port on which the PostgreSQL server is listening for
                        TCP connections. This environment variable is option. If
                        omitted, the standard PostgreSQL port of 5432 will be
                        used.
@@ -308,7 +308,7 @@ END
 
     # Update config file
     set_property "postgresql-hostname" "$POSTGRES_HOSTNAME"
-    set_property "postgresql-port"     "$POSTGRES_PORT"
+    set_property "postgresql-port"     "$POSTGRES_SERVICE_PORT"
 
     set_optional_property               \
         "postgresql-absolute-max-connections" \
@@ -328,7 +328,7 @@ END
 
     set_optional_property                                   \
         "postgresql-default-max-group-connections-per-user" \
-        "$POSTGRES_DEFAULT_MAX_GROUP_CONNECTIONS_PER_USER"a
+        "$POSTGRES_DEFAULT_MAX_GROUP_CONNECTIONS_PER_USER"
 }
 
 ##

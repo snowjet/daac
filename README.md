@@ -27,21 +27,18 @@ Essentially create a Container Based VDI system running on OpenShift.
 
 **Buildah Build**
 ```bash
-buildah bud -f Dockerfile \
-            -t html5:latest \
-            --build-arg DESKTOP=mate \
-            --build-arg OC_DEV_TOOLS=true \
-            --squash --logfile ./buildlog .
+buildah bud -f dockerfiles/guac.dockerfile -t guac .
+buildah bud -f dockerfiles/guacd.dockerfile -t guacd .
+buildah bud -f dockerfiles/desktop.dockerfile -t gdesk .
 ```
 
 **Docker Build**
 For a docker build with guacamole that hooks it all together run.
 
 ```bash
-docker build -f html5/Dockerfile \
-             -t html5 \
-             --build-arg OC_DEV_TOOLS=true \
-             --build-arg DESKTOP=mate .
+docker build -f dockerfiles/guac.dockerfile -t guac .
+docker build -f dockerfiles/guacd.dockerfile -t guacd .
+docker build -f dockerfiles/desktop.dockerfile -t gdesk .
 ```
 
 ## HowTo Run in OpenShift
@@ -78,7 +75,6 @@ system:image-pullers    /system:image-puller                                    
 
 ```
 
-
 **Step 2. Import Template into OpenShift**
 
 Import the template from the repo:
@@ -110,14 +106,18 @@ Browse to: https://mydaac.apps.ocp.example.com
 
 ## HowTo Run in Locally
 
-You can run the container locally via the command below. You need a minimum of 3 containers. The broker wont work, as it requires and OpenShift cluster to create services, routes and spin up desktop containers.
+You can run the container locally via the command below. You need a minimum of 3 containers. The broker wont work, as it requires and OpenShift cluster to create services, routes and spin up desktop containers
 
-### Build Local Containers
+### Local build 
 
-docker build -f Dockerfiles/guac.dockerfile -t guac .
-docker build -f Dockerfiles/guacd.dockerfile -t guacd .
-docker build -f Dockerfiles/desktop.dockerfile -t gdesk .
-docker build -f Dockerfiles/pgsql.dockerfile -t pgsql .
+For a docker build with guacamole that hooks it all together run.
+
+```bash
+docker build -f dockerfiles/guac.dockerfile -t guac .
+docker build -f dockerfiles/guacd.dockerfile -t guacd .
+docker build -f dockerfiles/desktop.dockerfile -t gdesk .
+docker build -f dockerfiles/pgsql.dockerfile -t pgsql .
+```
 
 ### Run and Link Docker Files
 
