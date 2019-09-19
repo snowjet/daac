@@ -89,7 +89,8 @@ Create the application from the imported template. The two passwords which shoul
 ```bash
 oc new-app --name mydaac --template=dcaas \
     -p POSTGRES_PASSWORD="guac_pass" \
-    -p GUACADMIN_PASSWORD="guacadmin"
+    -p GUACADMIN_PASSWORD="guacadmin" \
+    -p
 ```
 
 **Step 4. Connect to the route**
