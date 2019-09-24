@@ -458,6 +458,18 @@ if [ -n "$LDAP_HOSTNAME" ]; then
     INSTALLED_AUTH="$INSTALLED_AUTH ldap"
 fi
 
+# Check if custom template
+FILE=/guac/guacamole.properties
+if test -f "$FILE"; then
+    echo "$FILE exist"
+    cat $FILE  > /etc/guacamole/guacamole.properties
+fi
+
+# Check if custom template
+if [[ $LOG_LEVEL == "DEBUG" ]]; then
+    ln -s /etc/guacamole/samples/logback.xml /etc/guacamole/logback.xml
+fi
+
 #
 # Validate that at least one authentication backend is installed
 #

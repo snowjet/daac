@@ -286,6 +286,11 @@ objects:
             value: '4822'
           - name: POSTGRES_HOSTNAME
             value: postgres
+          - name: LOG_LEVEL
+            value: ${LOG_LEVEL}
+          volumeMounts:
+            - name: guac-config
+              mountPath: /guac
           readinessProbe:
             tcpSocket:
               port: guac-port
@@ -296,6 +301,13 @@ objects:
               port: guac-port
             initialDelaySeconds: 15
             periodSeconds: 20
+        volumes:
+        - name: guac-config
+          configMap:
+            name: guac-configmap
+            items:
+              - key: guacamole.properties
+                path: guacamole.properties
     triggers:
     - type: ConfigChange
     - imageChangeParams:
@@ -409,6 +421,29 @@ objects:
           name: daac-api:latest
       type: ImageChange
 
+- kind: ConfigMap
+  apiVersion: v1
+  metadata:
+    name: guac-configmap
+  data:
+    guacamole.properties: |-
+      # Guac
+      guacd-hostname: guacd
+      guacd-port: 4822
+      # OpenID
+      openid-authorization-endpoint: ${oauth_endpoint}
+      openid-jwks-endpoint: ${oauth_jwks_endpoint}
+      openid-issuer: ${oauth_issuer}
+      openid-client-id: ${oauth_client_id}
+      openid-redirect-uri: ${oauth_redirect_uri}
+      openid-username-claim-type: ${openid_username_claim_type}
+      openid-max-token-validity: 700
+      # Postgres
+      postgresql-hostname: postgres
+      postgresql-port: 5432
+      postgresql-database: ${POSTGRES_DATABASE}
+      postgresql-username: ${POSTGRES_USER}
+      postgresql-password: ${POSTGRES_PASSWORD}
 
 parameters:
 - description: POSTGRES username
@@ -427,4 +462,26 @@ parameters:
   name: GUACADMIN_PASSWORD
   value: guacadmin
   required: true
-
+- description: openid-authorization-endpoint
+  name: oauth_endpoint
+  required: true
+- description: openid-jwks-endpoint
+  name: oauth_jwks_endpoint
+  required: true
+- description: openid-issuer
+  name: oauth_issuer
+  required: true
+- description: openid-client-id
+  name: oauth_client_id
+  required: true
+- description: openid-redirect-uri
+  name: oauth_redirect_uri
+  required: true
+- description: openid-username-claim-type
+  name: openid_username_claim_type
+  value: email
+  required: true
+- description: Log Level
+  name: LOG_LEVEL
+  value: INFO
+  required: true
