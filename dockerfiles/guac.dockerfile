@@ -13,6 +13,15 @@ ARG POSTGRES_CONNECTOR_VERSION='42.2.6'
 #     POSTGRES_DATABASE_FILE=/run/secrets/db \
 #     POSTGRES_USER_FILE=/run/secrets/user \
 #     POSTGRES_PASSWORD_FILE=/run/secrets/pwd
+# OpenID Connect
+# openid-authorization-endpoint: keycloak auth endpoint
+# openid-jwks-endpoint: keycloak jwks endpoint
+# openid-issuer: keycloak issuer
+# openid-client-id: guacamole
+# openid-redirect-uri: https://guacamole.example.com/guacamole
+# openid-username-claim-type: username
+# openid-scope: openid email profile
+# openid-allowed-clock-skew: 500
 
 USER root
 
@@ -24,20 +33,25 @@ RUN find /tmp/ -name '*.sh' -exec chmod a+x {} +
 
 RUN rm -rf /deployments/* && \
     curl -L -o /deployments/ROOT.war https://www.apache.org/dist/guacamole/${GUACAMOLE_VERSION}/binary/guacamole-${GUACAMOLE_VERSION}.war && \
-    mkdir -p /etc/guacamole/{extensions,lib} && \
-    curl -L -o guacamole-auth-quickconnect.tar.gz https://www.apache.org/dist/guacamole/${GUACAMOLE_VERSION}/binary/guacamole-auth-quickconnect-${GUACAMOLE_VERSION}.tar.gz && \
-    tar -xzf guacamole-auth-quickconnect.tar.gz && \
-    mv guacamole-auth-quickconnect-${GUACAMOLE_VERSION}/*.jar /etc/guacamole/extensions && \
-    rm -rf guacamole-auth-quickconnect* && \
+    mkdir -p /etc/guacamole/{extensions,lib,samples} && \
+    curl -L -o guacamole-auth-openid.tar.gz https://www.apache.org/dist/guacamole/${GUACAMOLE_VERSION}/binary/guacamole-auth-openid-${GUACAMOLE_VERSION}.tar.gz && \
+    tar -xzf guacamole-auth-openid.tar.gz && \
+    mv guacamole-auth-openid-${GUACAMOLE_VERSION}/*.jar /etc/guacamole/extensions/00-guacamole-auth-openid.jar && \
+    rm -rf guacamole-auth-openid* && \
     curl -L -o guacamole-auth-jdbc.tar.gz https://www.apache.org/dist/guacamole/${GUACAMOLE_VERSION}/binary/guacamole-auth-jdbc-${GUACAMOLE_VERSION}.tar.gz && \
     tar -xzf guacamole-auth-jdbc.tar.gz && \
-    mv guacamole-auth-jdbc-${GUACAMOLE_VERSION}/postgresql/*.jar /etc/guacamole/extensions && \
+    mv guacamole-auth-jdbc-${GUACAMOLE_VERSION}/postgresql/*.jar /etc/guacamole/extensions/01-guacamole-auth-jdbc-postgres.jar && \
     rm -rf guacamole-auth-jdbc* && \
     curl -L -o /etc/guacamole/lib/postgres-connector.jar https://jdbc.postgresql.org/download/postgresql-${POSTGRES_CONNECTOR_VERSION}.jar && \
-    cp /tmp/config/guacamole/guacamole.properties /etc/guacamole/guacamole.properties && \
+    cp -r /tmp/config/guacamole/* /etc/guacamole/ && \
     chown jboss:root -R /deployments /etc/guacamole && \
     chgrp -R 0 /etc/guacamole /deployments && chmod -R g=u /etc/guacamole /deployments && \
     ls -alR /etc/guacamole
+
+    # curl -L -o guacamole-auth-quickconnect.tar.gz https://www.apache.org/dist/guacamole/${GUACAMOLE_VERSION}/binary/guacamole-auth-quickconnect-${GUACAMOLE_VERSION}.tar.gz && \
+    # tar -xzf guacamole-auth-quickconnect.tar.gz && \
+    # mv guacamole-auth-quickconnect-${GUACAMOLE_VERSION}/*.jar /etc/guacamole/extensions && \
+    # rm -rf guacamole-auth-quickconnect* && \
 
 # Final Clean
 RUN \

@@ -11,6 +11,26 @@ metadata:
   creationTimestamp: null
   name: dcaas
 objects:
+
+# Service account for the guac-api
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: guacrobot
+
+# apply the admin role to the guac-api
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: RoleBinding
+  metadata:
+    name: admin-guacrobot
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: admin
+  subjects:
+  - kind: ServiceAccount
+    name: guacrobot
+
 - apiVersion: "v1"
   kind: "ImageStream"
   metadata:
