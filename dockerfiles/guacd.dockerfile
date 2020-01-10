@@ -1,7 +1,7 @@
 #FROM registry.access.redhat.com/ubi7/ubi
 FROM centos:7
 
-LABEL io.openshift.expose-services="4822:http" 
+LABEL io.openshift.expose-services="4822:http"
 
 ENV GUACD_LOG_LEVEL=info
 

@@ -307,8 +307,8 @@ END
     fi
 
     # Update config file
-    set_property "postgresql-hostname" "$POSTGRES_HOSTNAME"
-    set_property "postgresql-port"     "$POSTGRES_SERVICE_PORT"
+    set_property "postgresql-hostname" "${POSTGRES_HOSTNAME}"
+    set_property "postgresql-port"     "${POSTGRES_SERVICE_PORT}"
 
     set_optional_property               \
         "postgresql-absolute-max-connections" \
