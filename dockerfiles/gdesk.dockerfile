@@ -1,15 +1,13 @@
 FROM centos:7
-# FROM fedora:latest
-# FROM registry.access.redhat.com/ubi7/ubi
 
 LABEL io.openshift.expose-services="3389:tcp"
 
 ENV container docker
+ENV PASSWORD_HASH="user"
+ENV USERNAME="user"
 
 ARG DESKTOP=""
 ARG OC_DEV_TOOLS=""
-
-ENV XRDP_PASSWORD="user"
 
 USER root
 
