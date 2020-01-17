@@ -3,7 +3,7 @@
 mkdir -p /home/user
 chown -R root:root /home/user
 
-useradd user -u 10001 -g 0 -d /home/user -G wheel
+useradd user -u 10001 -g 0 -d /home/user -G wheel,tty
 
 chmod 400 /etc/shadow
 cp /etc/shadow /etc/shadow.template

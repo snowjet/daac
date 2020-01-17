@@ -32,13 +32,13 @@ buildah bud -f dockerfiles/guacd.dockerfile -t guacd .
 buildah bud -f dockerfiles/desktop.dockerfile -t gdesk .
 ```
 
-**Docker Build**
-For a docker build with guacamole that hooks it all together run.
+**buildah bud**
+For a buildah bud with guacamole that hooks it all together run.
 
 ```bash
-docker build -f dockerfiles/guac.dockerfile -t guac .
-docker build -f dockerfiles/guacd.dockerfile -t guacd .
-docker build -f dockerfiles/desktop.dockerfile -t gdesk .
+buildah bud -f dockerfiles/guac.dockerfile -t guac .
+buildah bud -f dockerfiles/guacd.dockerfile -t guacd .
+buildah bud -f dockerfiles/desktop.dockerfile -t gdesk .
 ```
 
 ## HowTo Run in OpenShift
@@ -111,13 +111,13 @@ You can run the container locally via the command below. You need a minimum of 3
 
 ### Local build 
 
-For a docker build with guacamole that hooks it all together run.
+For a buildah bud with guacamole that hooks it all together run.
 
 ```bash
-docker build -f dockerfiles/guac.dockerfile -t guac .
-docker build -f dockerfiles/guacd.dockerfile -t guacd .
-docker build -f dockerfiles/desktop.dockerfile -t gdesk .
-docker build -f dockerfiles/pgsql.dockerfile -t pgsql .
+buildah bud -f dockerfiles/guac.dockerfile -t guac .
+buildah bud -f dockerfiles/guacd.dockerfile -t guacd .
+buildah bud -f dockerfiles/desktop.dockerfile -t gdesk .
+buildah bud -f dockerfiles/pgsql.dockerfile -t pgsql .
 ```
 
 ### Run and Link Docker Files
@@ -134,20 +134,20 @@ export POSTGRES_PASSWORD='guac_pass'
 export POSTGRES_DATABASE='guacamole_db'
 export POSTGRES_SERVICE_PORT='5432'
 
-docker run --name desktop \
-    -e XRDP_PASSWORD=${XRDP_PASSWORD} \
-    -d -p 3389:3389 desktop
+podman run --name gdesk -e PASSWORD_HASH=$PASSWORD_HASH \
+    -e USERNAME=$USERNAME -p 3389:3389/tcp \
+    --shm-size 1G -v tmpfs:/tmp -t gdesk
 
-docker run --name guacd --link desktop:desktop \
+podman run--name guacd --link desktop:desktop \
     -d -p 4822:4822 guacd
 
-docker run --name postgres \
+podman run--name postgres \
     -e POSTGRESQL_USER=${POSTGRES_USER} \
     -e POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD} \
     -e POSTGRESQL_DATABASE=${POSTGRES_DATABASE} \
     -d -p 5432:5432 registry.redhat.io/rhscl/postgresql-96-rhel7
 
-docker run --name guac --link guacd:guacd \
+podman run--name guac --link guacd:guacd \
     --link postgres:postgres \
     -e POSTGRES_DATABASE=${POSTGRES_DATABASE}  \
     -e POSTGRES_USER=${POSTGRES_USER}    \
@@ -156,7 +156,7 @@ docker run --name guac --link guacd:guacd \
     -e GUACD_PORT=${GUACD_PORT} \
     -d -p 8080:8080 guac
 
-docker run --name guac-api --link postgres:postgres \
+podman run--name guac-api --link postgres:postgres \
     -e POSTGRES_DATABASE=${POSTGRES_DATABASE}  \
     -e POSTGRES_USER=${POSTGRES_USER}    \
     -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
