@@ -56,6 +56,10 @@ chmod 770 /home/user
 chown -R user:0 /home/user
 chmod -R g+rw /etc/passwd
 
+# Work around the pam.d auth issues. This is insecure!!!!!
+echo "Modifying PAM.D for testing this is insecure!!!"
+cp /tmp/etc/pam.d/password-auth /etc/pam.d/password-auth 
+
 sed "s@user:x:10001:@user:x:\${USER_ID}:@g" /etc/passwd > /etc/passwd.template
 
 # The following commands are needed to work in 
