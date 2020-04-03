@@ -36,11 +36,11 @@ rm -rf /tmp/*.sh; \
 rm -rf /tmp/config; \
 rm -f /var/log/*.log
 
-USER 10001
+USER root
 
 # You need this else X wont work
 WORKDIR /home/user
 
 EXPOSE 3389
 VOLUME [ "/dev/shm" ]
-ENTRYPOINT /opt/bin/uid_entrypoint.sh xrdp; /usr/bin/supervisord -c /etc/supervisord.conf
+ENTRYPOINT ["sh", "/opt/bin/entrypoint.sh"]
