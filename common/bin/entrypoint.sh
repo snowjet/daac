@@ -1,13 +1,17 @@
 #!/bin/bash
 
+# retrieve uid
+# USERNAME=${USERNAME}
+# USER_ID=$(id -u)
+USER_ID='10001'
+
 # Use password from env
 PASSWORD_HASH=${PASSWORD_HASH}
 
 # Update user uid and password
-sed "s@user:x:10001:@user:x:10001:@g" /etc/passwd.template > /etc/passwd
-chmod 600 /etc/shadow /etc/shadow.template
+sed "s@user:x:\${USER_ID}:@user:x:${USER_ID}:@g" /etc/passwd.template > /etc/passwd
+chmod 660 /etc/shadow /etc/shadow.template
 sed "s@user:\!\!:@user:${PASSWORD_HASH}:@g" /etc/shadow.template > /etc/shadow
-chmod 400 /etc/shadow /etc/shadow.template
 
 rm -rf /home/user
 mkdir /home/user
