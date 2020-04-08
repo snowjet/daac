@@ -1,0 +1,6 @@
+[submodule "daac-ansible"]
+	path = daac-ansible
+	url = https://github.com/snowjet/daac-ansible
+[submodule "daac-broker"]
+	path = daac-broker
+	url = https://github.com/snowjet/daac-broker
