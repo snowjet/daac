@@ -11,7 +11,7 @@ ADD common/config /tmp/config
 
 RUN yum update -y && \
     yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
-    yum --enablerepo=epel-testing install -y guacd libguac{,-client*} liberation-fonts dejavu-sans-mono-font freerdp-plugins freerdp-libs && \
+    yum --enablerepo=epel-testing install -y guacd libguac{,-client*} liberation-fonts dejavu-sans-mono-font terminus-fonts freerdp-plugins freerdp-libs ghostscript  && \
     mkdir -p /etc/guacamole && \
     yum autoremove -y; \
     yum clean all; \
