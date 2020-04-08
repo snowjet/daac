@@ -22,7 +22,7 @@ The easiest way to get started is to use Code Ready Containers and use daac-ansi
 
 Once deployed just browse to: https://daac.apps-crc.testing
 
-![Demo](https://raw.githubusercontent.com/snowjet/daac-ansible/master/demo/daac-ansible.svg)
+![Demo Deploying Daac](./demo/daac-ansible.svg)
 
 ## Howto Build Containers Manually
 
