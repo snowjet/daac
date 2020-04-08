@@ -16,7 +16,7 @@ RUN yum update -y && \
     mkdir -p /etc/guacamole && \
     mkdir -p /home/user && \
     mkdir -p /opt/bin && \
-    chmod g=u /etc/passwd && \
+    chmod g=u /etc/passwd /home/user && \
     cp /tmp/bin/uid_entrypoint.sh /opt/bin/uid_entrypoint.sh && \
     chmod +x /opt/bin/uid_entrypoint.sh
 
