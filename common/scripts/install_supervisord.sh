@@ -1,6 +1,7 @@
 # Setup Supervisor and activate dbus
 
 yum install -y supervisor
+cp /etc/supervisord.conf /etc/supervisord.conf.bak
 cp /tmp/config/supervisord/supervisord.conf /etc/supervisord.conf
 
 mkdir -p /var/run/dbus
