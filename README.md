@@ -18,7 +18,7 @@ Create a Container Based VDI system running on OpenShift.
 
 ## Howto Run in OpenShift
 
-The easiest way to get started is to use Code Ready Containers and use daac-ansible: https://github.com/snowjet/daac-ansible
+The easiest way to get started is to use Code Ready Containers and use daac-ansible: [https://github.com/snowjet/daac-ansible](https://github.com/snowjet/daac-ansible)
 
 Once deployed just browse to: https://daac.apps-crc.testing
 
