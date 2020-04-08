@@ -1,11 +1,11 @@
-FROM tomcat:latest
+FROM jboss/wildfly
 # FROM registry.redhat.io/jboss-webserver-5/webserver50-tomcat9-openshift
 
 LABEL io.openshift.expose-services="8080:http" \
       io.openshift.wants="postgres"
 
-ARG GUACAMOLE_VERSION='1.0.0'
-ARG POSTGRES_CONNECTOR_VERSION='42.2.6'
+ARG GUACAMOLE_VERSION='1.1.0'
+ARG POSTGRES_CONNECTOR_VERSION='42.2.12'
 
 # Example Environment
 # ENV POSTGRES_DATABASE=guacamole_db  \
@@ -32,8 +32,8 @@ ADD common/scripts/ /tmp/
 
 RUN find /tmp/ -name '*.sh' -exec chmod a+x {} +
 
-RUN rm -rf /deployments/* && \
-    curl -L -o /deployments/ROOT.war https://www.apache.org/dist/guacamole/${GUACAMOLE_VERSION}/binary/guacamole-${GUACAMOLE_VERSION}.war && \
+RUN rm -rf /opt/jboss/wildfly/standalone/deployments/* && \
+    curl -L -o /opt/jboss/wildfly/standalone/deployments/ROOT.war https://www.apache.org/dist/guacamole/${GUACAMOLE_VERSION}/binary/guacamole-${GUACAMOLE_VERSION}.war && \
     mkdir -p /etc/guacamole/{extensions,lib,samples} && \
     curl -L -o guacamole-auth-openid.tar.gz https://www.apache.org/dist/guacamole/${GUACAMOLE_VERSION}/binary/guacamole-auth-openid-${GUACAMOLE_VERSION}.tar.gz && \
     tar -xzf guacamole-auth-openid.tar.gz && \
@@ -45,8 +45,8 @@ RUN rm -rf /deployments/* && \
     rm -rf guacamole-auth-jdbc* && \
     curl -L -o /etc/guacamole/lib/postgres-connector.jar https://jdbc.postgresql.org/download/postgresql-${POSTGRES_CONNECTOR_VERSION}.jar && \
     cp -r /tmp/config/guacamole/* /etc/guacamole/ && \
-    chown jboss:root -R /deployments /etc/guacamole && \
-    chgrp -R 0 /etc/guacamole /deployments && chmod -R g=u /etc/guacamole /deployments && \
+    chown jboss:root -R /opt/jboss/wildfly/standalone/deployments /etc/guacamole && \
+    chgrp -R 0 /etc/guacamole /opt/jboss/wildfly/standalone/deployments && chmod -R g=u /etc/guacamole /opt/jboss/wildfly/standalone/deployments && \
     ls -alR /etc/guacamole
 
     # curl -L -o guacamole-auth-quickconnect.tar.gz https://www.apache.org/dist/guacamole/${GUACAMOLE_VERSION}/binary/guacamole-auth-quickconnect-${GUACAMOLE_VERSION}.tar.gz && \
@@ -63,7 +63,8 @@ RUN \
     rm -rf /tmp/config; \
     rm -f /var/log/*.log    
 
-USER 10001
+USER 1000
 EXPOSE 8080
-ENTRYPOINT /opt/bin/guac_setup.sh; /opt/jws-5.0/tomcat/bin/launch.sh
+# ENTRYPOINT /opt/bin/guac_setup.sh; /opt/jws-5.0/tomcat/bin/launch.sh
+ENTRYPOINT /opt/bin/guac_setup.sh; /opt/jboss/wildfly/bin/standalone.sh -b 0.0.0.0
 
