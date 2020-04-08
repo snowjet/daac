@@ -2,7 +2,7 @@
 
 ## Goal
 
-Essentially create a Container Based VDI system running on OpenShift.
+Create a Container Based VDI system running on OpenShift.
 
 **Key Features:**
 
@@ -12,11 +12,19 @@ Essentially create a Container Based VDI system running on OpenShift.
 * XRDP is used to spawn the desktop. XRDP allows the desktop match the size of the current window. WHich means if you full screen your browser when logging in you will have a full screen desktop.
 * Build a desktop on Mate (recommended), Gnome3 or XFCE
 
-## Demo
+## DCaaS Run Demo
 
-!['HTML5-DaaC Demo'](https://raw.githubusercontent.com/snowjet/DaaC/master/demo/HTML5-DaaC.gif)
+!['DCaaS Run Demo'](./demo/daac-run.gif)
 
-## Howto Build
+## Howto Run in OpenShift
+
+The easiest way to get started is to use Code Ready Containers and use daac-ansible: https://github.com/snowjet/daac-ansible
+
+Once deployed just browse to: https://daac.apps-crc.testing
+
+![Demo](./daac-ansible/demo/daac-ansible.svg)
+
+## Howto Build Containers Manually
 
 **Build Arguments**
 
@@ -32,137 +40,22 @@ buildah bud -f dockerfiles/guacd.dockerfile -t guacd .
 buildah bud -f dockerfiles/desktop.dockerfile -t gdesk .
 ```
 
-**buildah bud**
-For a buildah bud with guacamole that hooks it all together run.
+## Requirements
 
-```bash
-buildah bud -f dockerfiles/guac.dockerfile -t guac .
-buildah bud -f dockerfiles/guacd.dockerfile -t guacd .
-buildah bud -f dockerfiles/desktop.dockerfile -t gdesk .
-```
+The daac-broker makes the assumption that all use exist in Auth0. You need to setup an Auth0 account and add the following settings under your application:
 
-## HowTo Run in OpenShift
+| Argument               | Setting                                                                                                  |
+|------------------------|:---------------------------------------------------------------------------------------------------------|
+| Allowed Callback URLs  | https://guac.apps-crc.testing/#/, https://guac.apps-crc.testing/, https://daac.apps-crc.testing/callback | 
+| Allowed Logout URLs    | https://daac.apps-crc.testing                                                                            |
 
-**Prerequisites. Modify the template to select your Container Repository**
+You will also need to record the following values and add them to ansible vars when running daac-ansible
 
-I am using quay.io which is awesome! But you can use any repository that your OpenShift cluster can access. The default parameter to override in the template is DAAC_IMAGE_NAME.
+* name of the Auth0 App
+* domain of the Auth0 App
+* client-id
+* client-secret
 
-```yaml
-parameters:
-- description: Daac Image
-  name: DAAC_IMAGE_NAME
-  value: quay.io/rarm_sa/daac
-```
-
-**Step 1. Create the SVC account**
-
-Todo:
-* need to reduce the access level for this service account.
-
-```bash
-oc create serviceaccount guacrobot
-
-oc policy add-role-to-user admin -z guacrobot
-
-# Check Bindings
-oc get rolebindings
-NAME                    ROLE                    USERS                                   GROUPS                        SERVICE ACCOUNTS   SUBJECTS
-admin                   /admin                  snowjet
-admin-0                 /admin                                                                                        guacrobot
-system:deployers        /system:deployer                                                                              deployer
-system:image-builders   /system:image-builder                                                                         builder
-system:image-pullers    /system:image-puller                                            system:serviceaccounts:guac
-
-```
-
-**Step 2. Import Template into OpenShift**
-
-Import the template from the repo:
-
-```bash
-oc apply -f openshift/daac-template.yml
-```
-
-**Step 3. Create the Applicaiton**
-
-Create the application from the imported template. The two passwords which should be set and unqiue are for Postgres and Guacamole Admin
-```bash
-oc new-app --name mydaac --template=dcaas \
-    -p POSTGRES_PASSWORD="guac_pass" \
-    -p GUACADMIN_PASSWORD="guacadmin" \
-    -p
-```
-
-**Step 4. Connect to the route**
-
-Browse to the route. You can find the route address with:
-
-```bash
-oc get route
-NAME      HOST/PORT                      PATH      SERVICES   PORT      TERMINATION
-rdp       mydaac.apps.ocp.example.com    daac       <all>     edge          None
-```
-
-Browse to: https://mydaac.apps.ocp.example.com
-
-## HowTo Run in Locally
-
-You can run the container locally via the command below. You need a minimum of 3 containers. The broker wont work, as it requires and OpenShift cluster to create services, routes and spin up desktop containers
-
-### Local build 
-
-For a buildah bud with guacamole that hooks it all together run.
-
-```bash
-buildah bud -f dockerfiles/guac.dockerfile -t guac .
-buildah bud -f dockerfiles/guacd.dockerfile -t guacd .
-buildah bud -f dockerfiles/desktop.dockerfile -t gdesk .
-buildah bud -f dockerfiles/pgsql.dockerfile -t pgsql .
-```
-
-### Run and Link Docker Files
-
-export XRDP_PASSWORD='KL3ECRd9dd68xFsZ'
-
-export GUACD_HOSTNAME='guacd'
-export GUACD_PORT='4822'
-
-export POSTGRES_HOST='127.0.0.1'
-
-export POSTGRES_USER='guac'
-export POSTGRES_PASSWORD='guac_pass'
-export POSTGRES_DATABASE='guacamole_db'
-export POSTGRES_SERVICE_PORT='5432'
-
-podman run --name gdesk -e PASSWORD_HASH=$PASSWORD_HASH \
-    -e USERNAME=$USERNAME -p 3389:3389/tcp \
-    --shm-size 1G -v tmpfs:/tmp -t gdesk
-
-podman run--name guacd --link desktop:desktop \
-    -d -p 4822:4822 guacd
-
-podman run--name postgres \
-    -e POSTGRESQL_USER=${POSTGRES_USER} \
-    -e POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD} \
-    -e POSTGRESQL_DATABASE=${POSTGRES_DATABASE} \
-    -d -p 5432:5432 registry.redhat.io/rhscl/postgresql-96-rhel7
-
-podman run--name guac --link guacd:guacd \
-    --link postgres:postgres \
-    -e POSTGRES_DATABASE=${POSTGRES_DATABASE}  \
-    -e POSTGRES_USER=${POSTGRES_USER}    \
-    -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
-    -e GUACD_HOSTNAME=${GUACD_HOSTNAME} \
-    -e GUACD_PORT=${GUACD_PORT} \
-    -d -p 8080:8080 guac
-
-podman run--name guac-api --link postgres:postgres \
-    -e POSTGRES_DATABASE=${POSTGRES_DATABASE}  \
-    -e POSTGRES_USER=${POSTGRES_USER}    \
-    -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
-    -d -p 8080:8080 guac
-
-Browse to: http://127.0.0.1:8080/
 
 ## License
 
