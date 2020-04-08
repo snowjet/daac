@@ -1,5 +1,5 @@
-#FROM registry.access.redhat.com/ubi7/ubi
-FROM centos:7
+#FROM centos:7
+FROM centos:8
 
 LABEL io.openshift.expose-services="4822:http"
 
@@ -10,7 +10,7 @@ USER root
 ADD common/config /tmp/config
 
 RUN yum update -y && \
-    yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
+    yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm && \
     yum --enablerepo=epel-testing install -y guacd libguac{,-client*} liberation-fonts dejavu-sans-mono-font freerdp-plugins && \
     mkdir -p /etc/guacamole && \
     yum autoremove -y; \
