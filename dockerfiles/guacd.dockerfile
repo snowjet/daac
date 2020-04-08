@@ -17,8 +17,8 @@ RUN yum update -y && \
     mkdir -p /home/user && \
     mkdir -p /opt/bin && \
     chmod g=u /etc/passwd && \
-    cp /tmp/bin/uid_entrypint.sh /opt/bin/uid_entrypint.sh && \
-    chmod +x /opt/bin/uid_entrypint.sh
+    cp /tmp/bin/uid_entrypoint.sh /opt/bin/uid_entrypoint.sh && \
+    chmod +x /opt/bin/uid_entrypoint.sh
 
 RUN yum autoremove -y; \
     yum clean all; \
@@ -31,4 +31,4 @@ RUN yum autoremove -y; \
 USER 10001
 WORKDIR /home/user
 EXPOSE 4822
-ENTRYPOINT /opt/bin/uid_entrypint.sh; guacd -b 0.0.0.0 -L $GUACD_LOG_LEVEL -f
+ENTRYPOINT /opt/bin/uid_entrypoint; guacd -b 0.0.0.0 -L $GUACD_LOG_LEVEL -f
