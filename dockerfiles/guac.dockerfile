@@ -30,6 +30,8 @@ ADD common/config /tmp/config
 ADD common/bin /opt/bin
 ADD common/scripts/ /tmp/
 
+RUN yum update -y && yum clean all
+
 RUN find /tmp/ -name '*.sh' -exec chmod a+x {} +
 
 RUN rm -rf /opt/jboss/wildfly/standalone/deployments/* && \
