@@ -1,5 +1,4 @@
 FROM jboss/wildfly
-# FROM registry.redhat.io/jboss-webserver-5/webserver50-tomcat9-openshift
 
 LABEL io.openshift.expose-services="8080:http" \
       io.openshift.wants="postgres"
