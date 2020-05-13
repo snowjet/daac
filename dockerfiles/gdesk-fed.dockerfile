@@ -27,11 +27,11 @@ rm -rf /tmp/*.sh; \
 rm -rf /tmp/config; \
 rm -f /var/log/*.log
 
-USER 10001
-
-# You need this else X wont work
-WORKDIR /home/user
-
 EXPOSE 3389
 VOLUME [ "/dev/shm" ]
-ENTRYPOINT /opt/bin/uid_entrypoint.sh xrdp; /usr/bin/supervisord -c /etc/supervisord.conf
+
+# You need this else X wont work
+USER root
+WORKDIR /home/user
+
+ENTRYPOINT ["sh", "/opt/bin/entrypoint.sh"]

@@ -56,15 +56,10 @@ chmod 770 /home/user
 chown -R user:0 /home/user
 chmod -R g+rw /etc/passwd
 
-# Work around the pam.d auth issues. This is insecure!!!!!
-echo "Modifying PAM.D for testing this is insecure!!!"
-cp /tmp/etc/pam.d/password-auth /etc/pam.d/password-auth 
-
 sed "s@user:x:10001:@user:x:\${USER_ID}:@g" /etc/passwd > /etc/passwd.template
 
 # The following commands are needed to work in 
 # OpenShift without privilged mode
-
 chgrp -R 0 /etc/xrdp
 chmod -R g=u /etc/xrdp
 
@@ -84,19 +79,6 @@ chmod -R g+w /home
 /opt/bin/fix_permissions.sh /var/run
 /opt/bin/fix_permissions.sh /var/log
 /opt/bin/fix_permissions.sh /home/user
-
-# Guac Specific
-#/opt/bin/fix_permissions.sh /var/lib/tomcat
-#/opt/bin/fix_permissions.sh /usr/share/tomcat/
-
-# OpenShift Tweaks may not be needed
-# touch /run/dbus/messagebus.pid
-# touch /run/dbus/system_bus_socket.pid
-# touch /run/dbus/system_bus_socket
-
-# chgrp -R 0 /run/dbus/messagebus.pid && chmod -R g=u /run/dbus/messagebus.pid
-# chgrp -R 0 /run/dbus/system_bus_socket.pid && chmod -R g=u /run/dbus/system_bus_socket.pid
-# chmod 777 /run/dbus/system_bus_socket
 
 chgrp -R 0 /var/run && chmod -R g=u /var/run 
 chgrp -R 0 /var/log && chmod -R g=u /var/log

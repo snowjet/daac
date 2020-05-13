@@ -1,4 +1,4 @@
-FROM centos:8
+FROM centos:7
 
 LABEL io.openshift.expose-services="3389:tcp"
 
@@ -36,9 +36,8 @@ rm -rf /tmp/*.sh; \
 rm -rf /tmp/config; \
 rm -f /var/log/*.log
 
-USER root
-
 # You need this else X wont work
+USER root
 WORKDIR /home/user
 
 EXPOSE 3389
