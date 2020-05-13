@@ -2,6 +2,7 @@
 
 yum install -y xrdp xorgxrdp tigervnc-server
 
+cp /etc/xrdp/xrdp.ini /etc/xrdp/xrdp.ini.bak
 cp /tmp/config/xrdp/xrdp.ini /etc/xrdp/xrdp.ini
 cp /tmp/config/xrdp/xrdp-template.ini /etc/xrdp/xrdp-template.ini
 cp /tmp/config/xrdp/sesman.ini /etc/xrdp/sesman.ini
