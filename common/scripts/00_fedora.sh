@@ -3,8 +3,7 @@
 dnf update -y
 dnf autoremove -y
 
-# Setup Supervisor and activate dbus
-
+echo "# Setup Supervisor and activate dbus"
 dnf install -q -y supervisor dbus-tools
 cp /etc/supervisord.conf /etc/supervisord.conf.bak
 cp /tmp/config/supervisord/supervisord.conf /etc/supervisord.conf
@@ -17,8 +16,7 @@ dbus-uuidgen --ensure
 
 cp /tmp/config/supervisord/conf.d/dbus.conf /etc/supervisord.d/dbus.conf
 
-# Install XRDP and tigervnc
-
+echo "# Install XRDP and tigervnc"
 dnf install -q -y xrdp xorgxrdp tigervnc-server
 
 cp /tmp/config/xrdp/xrdp.ini /etc/xrdp/xrdp.ini
@@ -31,7 +29,7 @@ chmod -R g+w /etc/xrdp
 
 cp /tmp/config/supervisord/conf.d/xrdp.conf /etc/supervisord.d/xrdp.conf
 
-# Install Desktop 
+echo "# Install Desktop"
 
 dnf install -q -y caja marco mate-desktop mate-menus mate-session-manager \
     mate-system-monitor xdg-user-dirs-gtk yelp gtk2-engines mate-terminal mate-panel \
@@ -41,8 +39,7 @@ echo "PREFERRED=/usr/bin/mate-session" > /etc/sysconfig/desktop
 
 dnf install -q -y liberation-fonts dejavu-sans-mono-fonts unzip htop wget chromium firefox curl
 
-# Create Placeholder for Local User
-
+echo "# Create Placeholder for Local User"
 mkdir -p /home/user
 chown -R root:root /home/user
 
@@ -58,8 +55,7 @@ chmod -R g+rw /etc/passwd
 
 sed "s@user:x:10001:@user:x:\${USER_ID}:@g" /etc/passwd > /etc/passwd.template
 
-# The following commands are needed to work in 
-# OpenShift without privilged mode
+echo "# OpenShift Specific"
 chgrp -R 0 /etc/xrdp
 chmod -R g=u /etc/xrdp
 
