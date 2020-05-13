@@ -1,4 +1,4 @@
-FROM centos:7
+FROM centos:8
 
 LABEL io.openshift.expose-services="3389:tcp"
 
