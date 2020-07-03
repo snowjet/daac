@@ -3,7 +3,7 @@ FROM jboss/wildfly
 LABEL io.openshift.expose-services="8080:http" \
       io.openshift.wants="postgres"
 
-ARG GUACAMOLE_VERSION='1.1.0'
+ARG GUACAMOLE_VERSION='1.2.0'
 ARG POSTGRES_CONNECTOR_VERSION='42.2.12'
 
 # Example Environment
