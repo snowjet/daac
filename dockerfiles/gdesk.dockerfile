@@ -42,4 +42,4 @@ WORKDIR /home/user
 
 EXPOSE 3389
 VOLUME [ "/dev/shm" ]
-ENTRYPOINT ["sh", "/opt/bin/entrypoint.sh"]
+ENTRYPOINT ["sh", "/opt/bin/ocp_entrypoint.sh"]
